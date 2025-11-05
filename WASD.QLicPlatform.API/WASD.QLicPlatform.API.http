@@ -1,0 +1,6 @@
+@WASD.QLicPlatform.API_HostAddress = http://localhost:5125
+
+GET {{WASD.QLicPlatform.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
