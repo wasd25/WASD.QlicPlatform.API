@@ -2,7 +2,7 @@ using WASD.QLicPlatform.API.Alerts.Domain.Model.Commands;
 
 namespace WASD.QLicPlatform.API.Alerts.Domain.Model.Aggregate;
 
-public partial class Alert
+public partial class Alerts
 {
     public int Id { get; set; }
     public string AlertType { get; set; }
@@ -10,7 +10,7 @@ public partial class Alert
     public string Message { get; set; }
     public string Timestamp { get; set; }
     
-    public Alert(int id, string alertType, string title, string message, string timestamp)
+    public Alerts(int id, string alertType, string title, string message, string timestamp)
     {
         Id = id;
         AlertType = alertType;
@@ -19,7 +19,7 @@ public partial class Alert
         Timestamp = timestamp;
     }
 
-    public Alert(CreateAlertCommand createAlertCommand)
+    public Alerts(CreateAlertsCommand createAlertCommand)
     {
         this.AlertType = createAlertCommand.AlertType;
         this.Title = createAlertCommand.Title;
@@ -27,7 +27,7 @@ public partial class Alert
         this.Timestamp = createAlertCommand.Timestamp;
     }
 
-    public Alert(UpdateAlertCommand updateAlertCommand)
+    public Alerts(UpdateAlertCommand updateAlertCommand)
     {
         this.AlertType = updateAlertCommand.AlertType;
         this.Title = updateAlertCommand.Title;
