@@ -34,7 +34,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Alerts\Application\Internal\" />
       <Folder Include="Shared\" />
     </ItemGroup>
 
