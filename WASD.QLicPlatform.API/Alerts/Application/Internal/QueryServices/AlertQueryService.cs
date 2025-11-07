@@ -1,7 +1,7 @@
 using WASD.QLicPlatform.API.Alerts.Domain.Model.Aggregate;
 using WASD.QLicPlatform.API.Alerts.Domain.Model.Queries;
-using WASD.QLicPlatform.API.Alerts.Repositories;
-using WASD.QLicPlatform.API.Alerts.Services;
+using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
+using WASD.QLicPlatform.API.Alerts.Domain.Services;
 
 namespace WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
 
