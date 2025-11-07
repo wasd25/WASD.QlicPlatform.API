@@ -5,5 +5,5 @@ namespace WASD.QLicPlatform.API.Alerts.Repositories;
 
 public interface IAlertRepository : IBaseRepository<Alert>
 {
-    Task<IEnumerable<Alert>> findByTitle(string title);
+    Task<IEnumerable<Alert>> findByTitleAsync(string title);
 }
