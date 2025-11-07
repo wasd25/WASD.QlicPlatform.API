@@ -1,0 +1,9 @@
+using WASD.QLicPlatform.API.Alerts.Domain.Model.Aggregate;
+using WASD.QLicPlatform.API.Shared.Domain.Repositories;
+
+namespace WASD.QLicPlatform.API.Alerts.Repositories;
+
+public interface IAlertRepository : IBaseRepository<Alert>
+{
+    Task<IEnumerable<Alert>> findByTitle(string title);
+}
