@@ -34,6 +34,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Alerts\Application\Internal\" />
+      <Folder Include="Alerts\Domain\Model\Aggregate\" />
+      <Folder Include="Alerts\Domain\Model\Commands\" />
+      <Folder Include="Alerts\Domain\Model\Queries\" />
       <Folder Include="Shared\" />
     </ItemGroup>
 
