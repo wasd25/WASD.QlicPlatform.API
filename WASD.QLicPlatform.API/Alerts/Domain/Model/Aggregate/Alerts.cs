@@ -4,11 +4,11 @@ namespace WASD.QLicPlatform.API.Alerts.Domain.Model.Aggregate;
 
 public partial class Alert
 {
-    public int Id { get; set; }
-    public string AlertType { get; set; }
-    public string Title { get; set; }
-    public string Message { get; set; }
-    public string Timestamp { get; set; }
+    public int Id { get; }
+    public string AlertType { get; private set; }
+    public string Title { get; private set; }
+    public string Message { get; private set; }
+    public string Timestamp { get; private set; }
     
     public Alert(int id, string alertType, string title, string message, string timestamp)
     {
