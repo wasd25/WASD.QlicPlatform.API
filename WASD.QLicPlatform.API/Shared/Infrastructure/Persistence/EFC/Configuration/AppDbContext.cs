@@ -1,11 +1,15 @@
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using WASD.QLicPlatform.API.IAM.Domain.Models;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
 public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
+    // Agregar el DbSet para Users
+    public DbSet<UserAggregate> Users { get; set; }
+
     /// <summary>
     ///     On configuring the database context
     /// </summary>
@@ -37,6 +41,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         
         // General Naming Convention for the database objects
         builder.UseSnakeCaseNamingConvention();
+
+        // Aplicar configuración de IAM
+        builder.ApplyConfiguration(new WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Configuration.UserConfiguration());
     }
-    
 }
