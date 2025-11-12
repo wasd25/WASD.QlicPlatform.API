@@ -8,12 +8,19 @@ using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
+// Importaciones para Anomalies
+using WASD.QLicPlatform.API.Anomalies.Domain.Repositories;
+using WASD.QLicPlatform.API.Anomalies.Infrastructure.Persistence.EFC.Repositories;
+using WASD.QLicPlatform.API.Anomalies.Domain.Services;
+using WASD.QLicPlatform.API.Anomalies.Application.Internal.CommandServices;
+using WASD.QLicPlatform.API.Anomalies.Application.Internal.QueryServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// Learn more about configuring OpenAPI at https://aka.ms/openapi
 builder.Services.AddOpenApi();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -35,7 +42,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    
     options.SwaggerDoc("v1",
         new OpenApiInfo()
         {
@@ -61,6 +67,11 @@ builder.Services.AddSwaggerGen(options =>
 
 // Shared Bounded Context 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Anomalies Bounded Context
+builder.Services.AddScoped<IAnomalyRepository, AnomalyRepository>();
+builder.Services.AddScoped<IAnomalyCommandService, AnomalyCommandService>();
+builder.Services.AddScoped<IAnomalyQueryService, AnomalyQueryService>();
 
 // Mediator Configuration
 
