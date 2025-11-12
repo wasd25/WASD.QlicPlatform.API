@@ -3,6 +3,10 @@ using WASD.QLicPlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Mediator.Cortex.Configuration;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
+using WASD.QLicPlatform.API.Reports.Domain.Repositories;
+using WASD.QLicPlatform.API.Reports.Infrastructure.Persistence.EFC.Repositories;
+using WASD.QLicPlatform.API.Reports.Application.Internal.CommandServices;
+using WASD.QLicPlatform.API.Reports.Application.Internal.QueryServices;
 using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -10,34 +14,21 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// -----------------------------
+// Controllers + Route Convention
+// -----------------------------
+builder.Services.AddControllers(options =>
+    options.Conventions.Add(new KebabCaseRouteNamingConvention()));
 
-builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// -----------------------------
+// OpenAPI / Swagger
+// -----------------------------
 builder.Services.AddOpenApi();
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-if (connectionString == null) throw new InvalidOperationException("Connection string not found.");
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    if (builder.Environment.IsDevelopment())
-        options.UseMySQL(connectionString)
-            .LogTo(Console.WriteLine, LogLevel.Information)
-            .EnableSensitiveDataLogging()
-            .EnableDetailedErrors();
-    else if (builder.Environment.IsProduction())
-        options.UseMySQL(connectionString)
-            .LogTo(Console.WriteLine, LogLevel.Error);
-});
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    
     options.SwaggerDoc("v1",
-        new OpenApiInfo()
+        new OpenApiInfo
         {
             Title = "WASD.QLicPlatform.API",
             Version = "v1",
@@ -57,37 +48,68 @@ builder.Services.AddSwaggerGen(options =>
     options.EnableAnnotations();
 });
 
-// Dependency Injection
+// -----------------------------
+// Database Connection (MySQL)
+// -----------------------------
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrEmpty(connectionString))
+    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// Shared Bounded Context 
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        options.UseMySQL(connectionString)
+            .LogTo(Console.WriteLine, LogLevel.Information)
+            .EnableSensitiveDataLogging()
+            .EnableDetailedErrors();
+    }
+    else
+    {
+        options.UseMySQL(connectionString)
+            .LogTo(Console.WriteLine, LogLevel.Error);
+    }
+});
+
+// -----------------------------
+// Dependency Injection
+// -----------------------------
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// Reports Module
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<ReportCommandService>();
+builder.Services.AddScoped<ReportQueryService>();
+
+// -----------------------------
 // Mediator Configuration
-
-// Add Mediator Injection Configuration
+// -----------------------------
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
-
-// Add Cortex Mediator for Event Handling
 builder.Services.AddCortexMediator(
     configuration: builder.Configuration,
-    handlerAssemblyMarkerTypes: [typeof(Program)], configure: options =>
+    handlerAssemblyMarkerTypes: [typeof(Program)],
+    configure: options =>
     {
         options.AddOpenCommandPipelineBehavior(typeof(LoggingCommandBehavior<>));
-        //options.AddDefaultBehaviors();
+        // options.AddDefaultBehaviors();
     });
 
+// -----------------------------
+// Build App
+// -----------------------------
 var app = builder.Build();
 
-// Verify if the database exists and create it if it doesn't
+// Ensure database exists
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
-
     context.Database.EnsureCreated();
 }
 
-// Configure the HTTP request pipeline.
+// -----------------------------
+// Middleware Pipeline
+// -----------------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -95,9 +117,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
