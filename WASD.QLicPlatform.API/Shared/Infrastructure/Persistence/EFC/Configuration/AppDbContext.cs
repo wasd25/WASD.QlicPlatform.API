@@ -1,6 +1,7 @@
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using WASD.QLicPlatform.API.Reports.Domain.Model.Aggregates;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
@@ -38,5 +39,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         // General Naming Convention for the database objects
         builder.UseSnakeCaseNamingConvention();
     }
-    
+    public DbSet<Report> Reports { get; set; }
+
 }
