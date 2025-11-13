@@ -18,27 +18,28 @@ using WASD.QLicPlatform.API.Anomalies.Application.Internal.QueryServices;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
-// Learn more about configuring OpenAPI at https://aka.ms/openapi
 builder.Services.AddOpenApi();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (connectionString == null) throw new InvalidOperationException("Connection string not found.");
 
+// ✅ Usa Pomelo (UseMySql con "l" minúscula)
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
+    var serverVersion = new MySqlServerVersion(new Version(9, 0, 0)); // Ajusta según tu versión real de MySQL
+
     if (builder.Environment.IsDevelopment())
-        options.UseMySQL(connectionString)
+        options.UseMySql(connectionString, serverVersion)
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors();
     else if (builder.Environment.IsProduction())
-        options.UseMySQL(connectionString)
+        options.UseMySql(connectionString, serverVersion)
             .LogTo(Console.WriteLine, LogLevel.Error);
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -64,39 +65,24 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Dependency Injection
-
-// Shared Bounded Context 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-// Anomalies Bounded Context
 builder.Services.AddScoped<IAnomalyRepository, AnomalyRepository>();
 builder.Services.AddScoped<IAnomalyCommandService, AnomalyCommandService>();
 builder.Services.AddScoped<IAnomalyQueryService, AnomalyQueryService>();
 
 // Mediator Configuration
-
-// Add Mediator Injection Configuration
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
-
-// Add Cortex Mediator for Event Handling
 builder.Services.AddCortexMediator(
     configuration: builder.Configuration,
     handlerAssemblyMarkerTypes: [typeof(Program)], configure: options =>
     {
         options.AddOpenCommandPipelineBehavior(typeof(LoggingCommandBehavior<>));
-        //options.AddDefaultBehaviors();
     });
 
 var app = builder.Build();
 
-// Verify if the database exists and create it if it doesn't
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AppDbContext>();
-
-    context.Database.EnsureCreated();
-}
+// ✅ No uses EnsureCreated si trabajas con migraciones
+// Solo aplica migraciones con `dotnet ef database update`
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -106,9 +92,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
