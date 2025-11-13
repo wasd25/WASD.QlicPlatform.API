@@ -1,5 +1,6 @@
 ﻿// WASD.QLicPlatform.API/Anomalies/Domain/Model/Aggregate/Anomaly.cs
 using System;
+using System.ComponentModel.DataAnnotations.Schema; 
 using WASD.QLicPlatform.API.Shared.Domain.Enums;
 
 namespace WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate
@@ -14,7 +15,11 @@ namespace WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate
         public DateTime DetectedAt { get; private set; }
         public DateTime? ResolvedAt { get; private set; }
         public string Description { get; private set; }
-        public string? Metadata { get; private set; } // JSON opcional (sensorId, location, etc.)
+
+        // JSON opcional (sensorId, location, etc.)
+        // Forzamos a que se cree como TEXT en MySQL
+        [Column(TypeName = "TEXT")]
+        public string? Metadata { get; private set; }
 
         private Anomaly() { } // Para EF
 
