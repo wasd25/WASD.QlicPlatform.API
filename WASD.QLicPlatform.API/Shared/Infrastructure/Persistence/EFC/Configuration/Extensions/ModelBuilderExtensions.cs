@@ -66,7 +66,7 @@ public static class ModelBuilderExtensions
         entity.Property(a => a.DetectedAt).HasColumnName("detected_at").IsRequired();
         entity.Property(a => a.ResolvedAt).HasColumnName("resolved_at");
         entity.Property(a => a.Description).HasColumnName("description").HasMaxLength(500);
-        entity.Property(a => a.Metadata).HasColumnName("metadata").HasColumnType("nvarchar(max)");
+        entity.Property(a => a.Metadata).HasColumnName("metadata").HasColumnType("longtext");
 
         // Índices útiles para filtros y tendencias
         entity.HasIndex(a => a.DetectedAt).HasDatabaseName("ix_anomalies_detected_at");
