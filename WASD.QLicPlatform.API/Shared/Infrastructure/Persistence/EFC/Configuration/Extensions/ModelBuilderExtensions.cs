@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate;
+using WASD.QLicPlatform.API.Alerts.Domain.Model.Aggregate;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 
@@ -71,5 +72,29 @@ public static class ModelBuilderExtensions
         // Índices útiles para filtros y tendencias
         entity.HasIndex(a => a.DetectedAt).HasDatabaseName("ix_anomalies_detected_at");
         entity.HasIndex(a => new { a.ProfileId, a.Status }).HasDatabaseName("ix_anomalies_profile_status");
+    }
+    
+    /// <summary>
+    ///     Configure the Alerts entity mapping
+    /// </summary>
+    /// <param name="builder">
+    ///     The model builder for the database context
+    /// </param>
+    public static void ConfigureAlerts(this ModelBuilder builder)
+    {
+        EntityTypeBuilder<Alert> entity = builder.Entity<Alert>();
+
+        entity.ToTable("alerts");
+        entity.HasKey(a => a.Id);
+
+        entity.Property(a => a.Id).HasColumnName("id");
+        entity.Property(a => a.AlertType).HasColumnName("alert_type").IsRequired().HasMaxLength(100);
+        entity.Property(a => a.Title).HasColumnName("title").IsRequired().HasMaxLength(200);
+        entity.Property(a => a.Message).HasColumnName("message").IsRequired().HasMaxLength(1000);
+        entity.Property(a => a.Timestamp).HasColumnName("timestamp").IsRequired().HasMaxLength(100);
+
+        // Índices útiles
+        entity.HasIndex(a => a.AlertType).HasDatabaseName("ix_alerts_alert_type");
+        entity.HasIndex(a => a.Timestamp).HasDatabaseName("ix_alerts_timestamp");
     }
 }

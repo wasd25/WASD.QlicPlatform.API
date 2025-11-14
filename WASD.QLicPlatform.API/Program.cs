@@ -28,22 +28,11 @@ using WASD.QLicPlatform.API.Profile.Domain.Repositories;
 using WASD.QLicPlatform.API.Profile.Infrastructure.Persistence.Repositories;
 
 
-// UsageManagement imports
-using WASD.QLicPlatform.API.UsageManagement.Domain.Repositories;
-using WASD.QLicPlatform.API.UsageManagement.Infrastructure.Persistence.EFC.Repositories;
-using WASD.QLicPlatform.API.UsageManagement.Application.Internal.CommandServices;
-using WASD.QLicPlatform.API.UsageManagement.Application.Internal.QueryServices;
-using WASD.QLicPlatform.API.UsageManagement.Domain.Services;
-using WASD.QLicPlatform.API.UsageManagement.Infrastructure.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
 builder.Services.AddOpenApi();
-
-// AutoMapper Configuration
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (connectionString == null) throw new InvalidOperationException("Connection string not found.");
@@ -106,24 +95,6 @@ builder.Services.AddScoped<IAnomalyRepository, AnomalyRepository>();
 builder.Services.AddScoped<IAnomalyCommandService, AnomalyCommandService>();
 builder.Services.AddScoped<IAnomalyQueryService, AnomalyQueryService>();
 
-
-// UsageManagement Repositories
-builder.Services.AddScoped<IUsageSummaryRepository, UsageSummaryRepository>();
-builder.Services.AddScoped<IUsageEventRepository, UsageEventRepository>();
-
-// UsageManagement Services
-builder.Services.AddScoped<UsageSummaryCommandService>();
-builder.Services.AddScoped<UsageSummaryQueryService>();
-builder.Services.AddScoped<UsageEventCommandService>();
-builder.Services.AddScoped<UsageEventQueryService>();
-
-// UsageManagement Domain Services
-builder.Services.AddScoped<IUsageAnalysisService, UsageAnalysisService>();
-
-// Mediator Configuration
-builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
-
-=======
 // Alert Bounded Context 
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
@@ -131,7 +102,6 @@ builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 
 // Mediator Configuration
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
-
 builder.Services.AddCortexMediator(
     configuration: builder.Configuration,
     handlerAssemblyMarkerTypes: [typeof(Program)], configure: options =>
@@ -154,6 +124,4 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
-
 app.Run();

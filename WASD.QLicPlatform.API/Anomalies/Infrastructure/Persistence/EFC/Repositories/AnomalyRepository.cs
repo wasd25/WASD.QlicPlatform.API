@@ -1,4 +1,4 @@
-﻿// WASD.QLicPlatform.API/Anomalies/Infrastructure/Persistence/EFC/Repositories/AnomalyRepository.cs
+﻿﻿// WASD.QLicPlatform.API/Anomalies/Infrastructure/Persistence/EFC/Repositories/AnomalyRepository.cs
         using Microsoft.EntityFrameworkCore;
         using System;
         using System.Collections.Generic;
@@ -19,7 +19,7 @@
                 public async Task<Anomaly?> GetByIdAsync(Guid id) =>
                     await Context.Set<Anomaly>().FindAsync(id);
         
-                public async Task AddAsync(Anomaly anomaly)
+                public new async Task AddAsync(Anomaly anomaly)
                 {
                     await Context.Set<Anomaly>().AddAsync(anomaly);
                     await Context.SaveChangesAsync();

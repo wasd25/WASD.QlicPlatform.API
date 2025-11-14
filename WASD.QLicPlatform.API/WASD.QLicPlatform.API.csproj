@@ -8,15 +8,10 @@
 
     <ItemGroup>
         <!-- Dependency Injection related packages -->
-
-        <PackageReference Include="AutoMapper" Version="15.1.0" />
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
         <!-- EntityFrameworkCore Database Persistence related packages -->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
@@ -31,10 +26,7 @@
         <!-- OpenAPI documentation related packages -->
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
 
-
-
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
-
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
         <!-- BCrypt Encription related packages -->
@@ -45,12 +37,10 @@
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
         <!-- Mediator pattern related packages -->
         <PackageReference Include="Cortex.Mediator" Version="2.1.0" />
-
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Shared\" />
-
     </ItemGroup>
 
 </Project>
