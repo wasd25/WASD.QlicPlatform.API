@@ -11,6 +11,8 @@ using WASD.QLicPlatform.API.IAM.Application.Services;
 using WASD.QLicPlatform.API.IAM.Domain.Repositories;
 using WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Repositories;
 using WASD.QLicPlatform.API.IAM.Infrastructure.Services;
+using WASD.QLicPlatform.API.Profile.Domain.Repositories;
+using WASD.QLicPlatform.API.Profile.Infrastructure.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +64,9 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Dependency Injection
+
+// Registrar servicios del BC Profile
+builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 
 
 //Registrar servicios de IAM
