@@ -7,6 +7,26 @@ using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using WASD.QLicPlatform.API.Alerts.Application.Internal.CommandServices;
+using WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
+using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
+using WASD.QLicPlatform.API.Alerts.Domain.Services;
+using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
+
+// Importaciones para Anomalies
+using WASD.QLicPlatform.API.Anomalies.Domain.Repositories;
+using WASD.QLicPlatform.API.Anomalies.Infrastructure.Persistence.EFC.Repositories;
+using WASD.QLicPlatform.API.Anomalies.Domain.Services;
+using WASD.QLicPlatform.API.Anomalies.Application.Internal.CommandServices;
+using WASD.QLicPlatform.API.Anomalies.Application.Internal.QueryServices;
+
+using WASD.QLicPlatform.API.IAM.Application.Services;
+using WASD.QLicPlatform.API.IAM.Domain.Repositories;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Repositories;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Services;
+using WASD.QLicPlatform.API.Profile.Domain.Repositories;
+using WASD.QLicPlatform.API.Profile.Infrastructure.Persistence.Repositories;
+
 
 // UsageManagement imports
 using WASD.QLicPlatform.API.UsageManagement.Domain.Repositories;
@@ -28,15 +48,18 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (connectionString == null) throw new InvalidOperationException("Connection string not found.");
 
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
+    var serverVersion = new MySqlServerVersion(new Version(9, 0, 0)); // Ajusta según tu versión real de MySQL
+
     if (builder.Environment.IsDevelopment())
-        options.UseMySQL(connectionString)
+        options.UseMySql(connectionString, serverVersion)
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors();
     else if (builder.Environment.IsProduction())
-        options.UseMySQL(connectionString)
+        options.UseMySql(connectionString, serverVersion)
             .LogTo(Console.WriteLine, LogLevel.Error);
 });
 
@@ -67,8 +90,22 @@ builder.Services.AddSwaggerGen(options =>
 
 // Dependency Injection
 
+// Registrar servicios del BC Profile
+builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+
+
+//Registrar servicios de IAM
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
+
 // Shared Bounded Context 
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAnomalyRepository, AnomalyRepository>();
+builder.Services.AddScoped<IAnomalyCommandService, AnomalyCommandService>();
+builder.Services.AddScoped<IAnomalyQueryService, AnomalyQueryService>();
+
 
 // UsageManagement Repositories
 builder.Services.AddScoped<IUsageSummaryRepository, UsageSummaryRepository>();
@@ -86,24 +123,26 @@ builder.Services.AddScoped<IUsageAnalysisService, UsageAnalysisService>();
 // Mediator Configuration
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
 
+=======
+// Alert Bounded Context 
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
+builder.Services.AddScoped<IAlertQueryService, AlertQueryService>(); 
+
+// Mediator Configuration
+builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
+
 builder.Services.AddCortexMediator(
     configuration: builder.Configuration,
     handlerAssemblyMarkerTypes: [typeof(Program)], configure: options =>
     {
         options.AddOpenCommandPipelineBehavior(typeof(LoggingCommandBehavior<>));
-        //options.AddDefaultBehaviors();
     });
 
 var app = builder.Build();
 
-// Verify if the database exists and create it if it doesn't
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AppDbContext>();
 
-    context.Database.EnsureCreated();
-}
+// Solo aplica migraciones con `dotnet ef database update`
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -113,9 +152,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
+
 
 app.Run();
