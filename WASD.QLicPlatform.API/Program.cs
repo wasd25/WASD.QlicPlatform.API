@@ -22,11 +22,6 @@ using WASD.QLicPlatform.API.IAM.Infrastructure.Services;
 using WASD.QLicPlatform.API.Profile.Domain.Repositories;
 using WASD.QLicPlatform.API.Profile.Infrastructure.Persistence.Repositories;
 
-using WASD.QLicPlatform.API.Alerts.Application.Internal.CommandServices;
-using WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
-using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
-using WASD.QLicPlatform.API.Alerts.Domain.Services;
-using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
