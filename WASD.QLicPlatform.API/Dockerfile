@@ -7,7 +7,8 @@ EXPOSE 5001
 # Imagen para compilar
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY . .
+COPY WASD.QlicPlatform.API/ ./WASD.QlicPlatform.API/
+WORKDIR /src/WASD.QlicPlatform.API
 RUN dotnet restore
 RUN dotnet publish -c Release -o /app/publish
 
