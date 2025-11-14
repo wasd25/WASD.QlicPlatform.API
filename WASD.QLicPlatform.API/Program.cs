@@ -13,7 +13,11 @@ using WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Repositories;
 using WASD.QLicPlatform.API.IAM.Infrastructure.Services;
 using WASD.QLicPlatform.API.Profile.Domain.Repositories;
 using WASD.QLicPlatform.API.Profile.Infrastructure.Persistence.Repositories;
-
+using WASD.QLicPlatform.API.Alerts.Application.Internal.CommandServices;
+using WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
+using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
+using WASD.QLicPlatform.API.Alerts.Domain.Services;
+using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -76,6 +80,11 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
 // Shared Bounded Context 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Alert Bounded Context
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
+builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 
 // Mediator Configuration
 
