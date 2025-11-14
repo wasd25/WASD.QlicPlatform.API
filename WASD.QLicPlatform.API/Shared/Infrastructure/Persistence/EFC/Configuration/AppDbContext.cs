@@ -1,6 +1,8 @@
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using WASD.QLicPlatform.API.UsageManagement.Domain.Models;
+using WASD.QLicPlatform.API.UsageManagement.Infrastructure.Persistence.EFC.Configurations;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
@@ -37,6 +39,13 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         
         // General Naming Convention for the database objects
         builder.UseSnakeCaseNamingConvention();
+
+        // Apply UsageManagement configurations
+        builder.ApplyConfiguration(new UsageSummaryConfiguration());
+        builder.ApplyConfiguration(new UsageEventConfiguration());
     }
-    
+
+    // DbSets for UsageManagement
+    public DbSet<UsageSummary> UsageSummaries { get; set; }
+    public DbSet<UsageEvent> UsageEvents { get; set; }
 }
