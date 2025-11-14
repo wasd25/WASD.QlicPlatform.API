@@ -1,0 +1,15 @@
+﻿# Excluye los directorios de Rider/VS
+.idea/
+.vs/
+
+# Excluye los artefactos de build
+**/bin/
+**/obj/
+
+# Excluye archivos de usuario
+*.user
+*.userprefs
+
+# Excluye archivos de Docker
+Dockerfile
+.dockerignore
