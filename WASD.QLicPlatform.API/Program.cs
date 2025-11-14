@@ -15,6 +15,18 @@ using WASD.QLicPlatform.API.Anomalies.Domain.Services;
 using WASD.QLicPlatform.API.Anomalies.Application.Internal.CommandServices;
 using WASD.QLicPlatform.API.Anomalies.Application.Internal.QueryServices;
 
+using WASD.QLicPlatform.API.IAM.Application.Services;
+using WASD.QLicPlatform.API.IAM.Domain.Repositories;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Repositories;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Services;
+using WASD.QLicPlatform.API.Profile.Domain.Repositories;
+using WASD.QLicPlatform.API.Profile.Infrastructure.Persistence.Repositories;
+using WASD.QLicPlatform.API.Alerts.Application.Internal.CommandServices;
+using WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
+using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
+using WASD.QLicPlatform.API.Alerts.Domain.Services;
+using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -24,7 +36,7 @@ builder.Services.AddOpenApi();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (connectionString == null) throw new InvalidOperationException("Connection string not found.");
 
-// ✅ Usa Pomelo (UseMySql con "l" minúscula)
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var serverVersion = new MySqlServerVersion(new Version(9, 0, 0)); // Ajusta según tu versión real de MySQL
@@ -65,10 +77,27 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Dependency Injection
+
+// Registrar servicios del BC Profile
+builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+
+
+//Registrar servicios de IAM
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
+
+// Shared Bounded Context 
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAnomalyRepository, AnomalyRepository>();
 builder.Services.AddScoped<IAnomalyCommandService, AnomalyCommandService>();
 builder.Services.AddScoped<IAnomalyQueryService, AnomalyQueryService>();
+
+// Alert Bounded Context
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
+builder.Services.AddScoped<IAlertQueryService, AlertQueryService>();
 
 // Mediator Configuration
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
@@ -81,7 +110,7 @@ builder.Services.AddCortexMediator(
 
 var app = builder.Build();
 
-// ✅ No uses EnsureCreated si trabajas con migraciones
+
 // Solo aplica migraciones con `dotnet ef database update`
 
 // Configure the HTTP request pipeline.

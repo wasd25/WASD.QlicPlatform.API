@@ -2,14 +2,19 @@ using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 using WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using WASD.QLicPlatform.API.IAM.Domain.Models;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
 public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
+
     
     public DbSet<Anomaly> Anomalies { get; set; }
     
+    // Agregar el DbSet para Users
+    public DbSet<UserAggregate> Users { get; set; }
+
     /// <summary>
     ///     On configuring the database context
     /// </summary>
@@ -41,9 +46,13 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         
         // General Naming Convention for the database objects
         builder.UseSnakeCaseNamingConvention();
+
         
         // Configuración específica de Anomalies
         builder.ConfigureAnomalies();
+
+        // Aplicar configuración de IAM
+        builder.ApplyConfiguration(new WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Configuration.UserConfiguration());
+
     }
-    
 }
