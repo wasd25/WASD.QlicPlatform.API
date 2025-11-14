@@ -7,6 +7,10 @@ using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using WASD.QLicPlatform.API.IAM.Application.Services;
+using WASD.QLicPlatform.API.IAM.Domain.Repositories;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Repositories;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +62,12 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Dependency Injection
+
+
+//Registrar servicios de IAM
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
 // Shared Bounded Context 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
