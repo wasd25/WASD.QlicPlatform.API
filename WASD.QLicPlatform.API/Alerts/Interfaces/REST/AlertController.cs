@@ -85,7 +85,7 @@ public class AlertController (IAlertCommandService alertCommandService, IAlertQu
             return BadRequest("Invalid Alert Id");
         }
 
-        var updateAlertCommand = new UpdateAlertCommand(resource.AlertId, resource.AlertType, resource.Title,
+        var updateAlertCommand = new UpdateAlertCommand(resource.AlertId, resource.type, resource.Title,
             resource.Message, resource.Timestamp);
         var result = await alertCommandService.Handle(updateAlertCommand);
 
