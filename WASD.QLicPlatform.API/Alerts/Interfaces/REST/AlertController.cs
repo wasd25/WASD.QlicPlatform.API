@@ -41,17 +41,16 @@ public class AlertController (IAlertCommandService alertCommandService, IAlertQu
         OperationId = "GetAlertById")]
     [SwaggerResponse(StatusCodes.Status200OK, "The Alert Was Found", typeof(AlertResource))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Data")]
-    public async Task<ActionResult> GetAlertById([FromRoute] GetAlertByIdQuery query)
+    public async Task<ActionResult> GetAlertById([FromRoute] int id)
     {
-        var getOrderByIdQuery = new GetAlertByIdQuery(query.Id);
-        
-        var result = await alertQueryService.Handle(getOrderByIdQuery);
+        if (id <= 0) return BadRequest("Invalid Id");
 
-        if (result == null)
-            return NotFound();
+        var query = new GetAlertByIdQuery(id);
+        var result = await alertQueryService.Handle(query);
+
+        if (result == null) return NotFound();
 
         var alertResource = AlertResourceFromEntityAssembler.ToResourceFromEntity(result);
-        
         return Ok(alertResource);
     }
 

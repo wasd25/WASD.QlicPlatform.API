@@ -14,6 +14,6 @@ public class AlertQueryService(IAlertRepository repository) : IAlertQueryService
 
     public async Task<Alert?> Handle(GetAlertByIdQuery query)
     {
-        return await repository.FindByIdAsync((int)query.Id);
+        return await repository.FindByIdAsync(query.Id);
     }
 }
