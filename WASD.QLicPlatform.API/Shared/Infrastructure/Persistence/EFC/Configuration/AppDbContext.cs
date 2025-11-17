@@ -1,5 +1,6 @@
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
+using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -37,6 +38,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         
         // General Naming Convention for the database objects
         builder.UseSnakeCaseNamingConvention();
+        
+        // Alerts Context
+        builder.ApplyAlertsConfiguration();
     }
     
 }
