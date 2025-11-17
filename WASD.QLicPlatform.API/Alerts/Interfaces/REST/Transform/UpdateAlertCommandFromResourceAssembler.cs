@@ -5,10 +5,10 @@ namespace WASD.QLicPlatform.API.Alerts.Interfaces.REST.Transform;
 
 public class UpdateAlertCommandFromResourceAssembler
 {
-    public static UpdateAlertCommand ToCommandFromResource(UpdateAlertResource resource)
+    public static UpdateAlertCommand ToCommandFromResource(int id, UpdateAlertResource resource)
     {
         return new UpdateAlertCommand(
-            resource.AlertId,
+            id,
             resource.AlertType,
             resource.Title,
             resource.Message,

@@ -78,22 +78,13 @@ public class AlertController (IAlertCommandService alertCommandService, IAlertQu
     [SwaggerResponse(StatusCodes.Status200OK, "The Alert Was Updated", typeof(AlertResource))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid Data")]
     [SwaggerResponse(StatusCodes.Status404NotFound, "Alert Not Found")]
-    public async Task<ActionResult> UpdateAlert([FromRoute] UpdateAlertCommand resource)
+    public async Task<ActionResult> UpdateAlert([FromRoute] int id, [FromBody] UpdateAlertResource resource)
     {
-        if (resource.AlertId <= 0)
-        {
-            return BadRequest("Invalid Alert Id");
-        }
+        if (id <= 0) return BadRequest("Invalid Alert Id");
 
-        var updateAlertCommand = new UpdateAlertCommand(resource.AlertId, resource.type, resource.Title,
-            resource.Message, resource.Timestamp);
-        var result = await alertCommandService.Handle(updateAlertCommand);
-
-        if (result == null)
-        {
-            return NotFound("The Alert Was Not Found");
-        }
-        
+        var command = UpdateAlertCommandFromResourceAssembler.ToCommandFromResource(id, resource);
+        var result = await alertCommandService.Handle(command);
+        if (result == null) return NotFound();
         return Ok(AlertResourceFromEntityAssembler.ToResourceFromEntity(result));
     }
 
@@ -107,11 +98,9 @@ public class AlertController (IAlertCommandService alertCommandService, IAlertQu
     public async Task<ActionResult> DeleteAlert(int id)
     {
         var resource = new DeleteAlertResource(id);
-        
-        var deleteAlertCommand = DeleteAlertCommandFromResourceAssembler.ToCommandFromResource(resource);
-        
-        await alertCommandService.Handle(deleteAlertCommand);
-        
+        var command = DeleteAlertCommandFromResourceAssembler.ToCommandFromResource(resource);
+        var result = await alertCommandService.Handle(command);
+        if (result == null) return NotFound("Alert Not Found");
         return NoContent();
     }
     

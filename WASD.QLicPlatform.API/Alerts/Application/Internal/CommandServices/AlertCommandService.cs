@@ -19,40 +19,33 @@ public class AlertCommandService(IAlertRepository repository, IUnitOfWork unitOf
     public async Task<Alert?> Handle(DeleteAlertCommand command)
     {
         var alert = await repository.FindByIdAsync(command.AlertId);
-
         if (alert == null)
-            throw new ArgumentException("Alert not found");
+            return null; 
 
         try
         {
-            repository.Update(alert);
+            repository.Remove(alert); 
             await unitOfWork.CompleteAsync();
         }
         catch (Exception e)
         {
-            throw new Exception($"Failed to update order {command.AlertId}", e);
+            throw new Exception($"Failed to delete alert {command.AlertId}", e);
         }
-        
+
         return alert;
     }
 
     public async Task<Alert?> Handle(UpdateAlertCommand command)
     {
         var alert = await repository.FindByIdAsync(command.AlertId);
-        
-        if (alert == null)
-            throw new ArgumentException("Alert not found");
 
-        try
-        {
-            repository.Remove(alert);
-            await unitOfWork.CompleteAsync();
-        }
-        catch (Exception e)
-        {
-            throw new Exception($"Failed to delete order {command.AlertId}", e);
-        }
+        if (alert == null) return null;
         
+        alert.Update(command.Type, command.Title, command.Message, command.Timestamp);
+        
+        repository.Update(alert);
+        
+        await unitOfWork.CompleteAsync();
         return alert;
     }
 }
