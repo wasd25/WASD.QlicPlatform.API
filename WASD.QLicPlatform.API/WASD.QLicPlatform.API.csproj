@@ -36,7 +36,7 @@
     <ItemGroup>
       <Folder Include="Shared\" />
       <Folder Include="Usage-Management\Application\" />
-      <Folder Include="Usage-Management\Infrastructure\" />
+      <Folder Include="Usage-Management\Infrastructure\Persistence\EFC\Configuration\" />
       <Folder Include="Usage-Management\Interfaces\" />
     </ItemGroup>
 
