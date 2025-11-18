@@ -36,7 +36,6 @@
     <ItemGroup>
       <Folder Include="Shared\" />
       <Folder Include="Usage-Management\Application\" />
-      <Folder Include="Usage-Management\Domain\Services\" />
       <Folder Include="Usage-Management\Infrastructure\" />
       <Folder Include="Usage-Management\Interfaces\" />
     </ItemGroup>
