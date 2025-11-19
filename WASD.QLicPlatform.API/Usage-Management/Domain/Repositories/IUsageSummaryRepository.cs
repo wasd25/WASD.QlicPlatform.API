@@ -3,7 +3,7 @@ using WASD.QLicPlatform.API.Usage_Management.Domain.Model.Aggregate;
 
 namespace WASD.QLicPlatform.API.Usage_Management.Domain.Repositories;
 
-public interface IUsageManagementRepository : IBaseRepository<UsageEvents>
+public interface IUsageSummaryRepository : IBaseRepository<UsageSummary>
 {
-    Task<IEnumerable<UsageEvents>> findBySource(string source);
+    
 }

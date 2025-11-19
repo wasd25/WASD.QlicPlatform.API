@@ -4,12 +4,14 @@ namespace WASD.QLicPlatform.API.Usage_Management.Domain.Model.Aggregate;
 
 public partial class UsageSummary
 {
+    public int Id { get; set; }
     public int Current { get; private set; }
     public int DailyLimit { get; private set; }
     public int MonthlyTotal { get; private set; }
 
-    public UsageSummary(int current, int dailyLimit, int monthlyTotal)
+    public UsageSummary(int id, int current, int dailyLimit, int monthlyTotal)
     {
+        Id = id;
         Current = current;
         DailyLimit = dailyLimit;
         MonthlyTotal = monthlyTotal;
