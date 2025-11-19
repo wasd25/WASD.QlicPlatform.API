@@ -5,7 +5,7 @@ namespace WASD.QLicPlatform.API.Usage_Management.Infrastructure.Persistence.EFC.
 
 public static class ModelBuilderExtensionsUsageSummary
 {
-    public static void ApplyUsageSummary(this ModelBuilder builder)
+    public static void ApplyUsageSummaryConfiguration(this ModelBuilder builder)
     {
         // usage Summary Context
         builder.Entity<UsageSummary>().Property(u => u.Current).IsRequired();

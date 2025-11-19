@@ -2,6 +2,7 @@ using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using WASD.QLicPlatform.API.Usage_Management.Infrastructure.Persistence.EFC.Configuration.Extensions;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
@@ -41,6 +42,14 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         
         // Alerts Context
         builder.ApplyAlertsConfiguration();
+        
+        // Usage Management Context
+        
+        // Usage Summary
+        builder.ApplyUsageSummaryConfiguration();
+        
+        // Usage Events
+        builder.ApplyUsageEventsConfiguration();
     }
     
 }

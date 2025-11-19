@@ -5,7 +5,7 @@ namespace WASD.QLicPlatform.API.Usage_Management.Infrastructure.Persistence.EFC.
 
 public static class ModelBuilderExtensionsUsageEvents
 {
-    public static void ApplyUsageEvents(this ModelBuilder builder)
+    public static void ApplyUsageEventsConfiguration(this ModelBuilder builder)
     {
         // Usage Events Context
         builder.Entity<UsageEvents>().HasKey(u => u.Id);
