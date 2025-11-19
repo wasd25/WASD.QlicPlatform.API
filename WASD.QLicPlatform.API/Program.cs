@@ -7,19 +7,6 @@ using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using WASD.QLicPlatform.API.Alerts.Application.Internal.CommandServices;
-using WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
-using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
-using WASD.QLicPlatform.API.Alerts.Domain.Services;
-using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
-
-// Importaciones para Anomalies
-using WASD.QLicPlatform.API.Anomalies.Domain.Repositories;
-using WASD.QLicPlatform.API.Anomalies.Infrastructure.Persistence.EFC.Repositories;
-using WASD.QLicPlatform.API.Anomalies.Domain.Services;
-using WASD.QLicPlatform.API.Anomalies.Application.Internal.CommandServices;
-using WASD.QLicPlatform.API.Anomalies.Application.Internal.QueryServices;
-
 using WASD.QLicPlatform.API.IAM.Application.Services;
 using WASD.QLicPlatform.API.IAM.Domain.Repositories;
 using WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Repositories;
@@ -89,16 +76,8 @@ builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
 // Shared Bounded Context 
-
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IAnomalyRepository, AnomalyRepository>();
-builder.Services.AddScoped<IAnomalyCommandService, AnomalyCommandService>();
-builder.Services.AddScoped<IAnomalyQueryService, AnomalyQueryService>();
 
-// Alert Bounded Context 
-builder.Services.AddScoped<IAlertRepository, AlertRepository>();
-builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
-builder.Services.AddScoped<IAlertQueryService, AlertQueryService>(); 
 
 // Mediator Configuration
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
