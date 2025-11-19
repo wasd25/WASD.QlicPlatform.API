@@ -37,7 +37,6 @@
       <Folder Include="Shared\" />
       <Folder Include="Usage-Management\Application\CommandServices\" />
       <Folder Include="Usage-Management\Application\QueryServices\" />
-      <Folder Include="Usage-Management\Infrastructure\Persistence\EFC\Repositories\" />
       <Folder Include="Usage-Management\Interfaces\" />
     </ItemGroup>
 
