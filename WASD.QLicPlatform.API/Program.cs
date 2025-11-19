@@ -7,6 +7,17 @@ using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using WASD.QLicPlatform.API.IAM.Application.Services;
+using WASD.QLicPlatform.API.IAM.Domain.Repositories;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Repositories;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Services;
+using WASD.QLicPlatform.API.Profile.Domain.Repositories;
+using WASD.QLicPlatform.API.Profile.Infrastructure.Persistence.Repositories;
+using WASD.QLicPlatform.API.Alerts.Application.Internal.CommandServices;
+using WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
+using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
+using WASD.QLicPlatform.API.Alerts.Domain.Services;
+using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
 using WASD.QLicPlatform.API.Usage_Management.Application.CommandServices;
 using WASD.QLicPlatform.API.Usage_Management.Application.QueryServices;
 using WASD.QLicPlatform.API.Usage_Management.Domain.Repositories;
@@ -64,8 +75,22 @@ builder.Services.AddSwaggerGen(options =>
 
 // Dependency Injection
 
+// Registrar servicios del BC Profile
+builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+
+//Registrar servicios de IAM
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
+
 // Shared Bounded Context 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Alert Bounded Context 
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
+builder.Services.AddScoped<IAlertQueryService, AlertQueryService>(); 
+
 
 // Usage Management Bounded Context
 
