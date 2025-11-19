@@ -35,7 +35,7 @@
 
     <ItemGroup>
       <Folder Include="Shared\" />
-      <Folder Include="Usage-Management\Interfaces\" />
+      <Folder Include="Usage-Management\Interfaces\REST\Transform\" />
     </ItemGroup>
 
 </Project>
