@@ -7,11 +7,11 @@ using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using WASD.QLicPlatform.API.Alerts.Application.Internal.CommandServices;
-using WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
-using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
-using WASD.QLicPlatform.API.Alerts.Domain.Services;
-using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
+using WASD.QLicPlatform.API.Usage_Management.Application.CommandServices;
+using WASD.QLicPlatform.API.Usage_Management.Application.QueryServices;
+using WASD.QLicPlatform.API.Usage_Management.Domain.Repositories;
+using WASD.QLicPlatform.API.Usage_Management.Domain.Services;
+using WASD.QLicPlatform.API.Usage_Management.Infrastructure.Persistence.EFC.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,10 +67,17 @@ builder.Services.AddSwaggerGen(options =>
 // Shared Bounded Context 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// Alert Bounded Context 
-builder.Services.AddScoped<IAlertRepository, AlertRepository>();
-builder.Services.AddScoped<IAlertCommandService, AlertCommandService>();
-builder.Services.AddScoped<IAlertQueryService, AlertQueryService>(); 
+// Usage Management Bounded Context
+
+// Usage Summary
+builder.Services.AddScoped<IUsageSummaryRepository, UsageSummaryRepository>();
+builder.Services.AddScoped<IUsageSummaryCommandService, UsageSummaryCommandService>();
+builder.Services.AddScoped<IUsageSummaryQueryService, UsageSummaryQueryService>();
+
+// Usage Events
+builder.Services.AddScoped<IUsageEventsRepository, UsageEventsRepository>();
+builder.Services.AddScoped<IUsageEventCommandService, UsageEventsCommandService>();
+builder.Services.AddScoped<IUsageEventQueryService, UsageEventsQueryService>();
 
 // Mediator Configuration
 
