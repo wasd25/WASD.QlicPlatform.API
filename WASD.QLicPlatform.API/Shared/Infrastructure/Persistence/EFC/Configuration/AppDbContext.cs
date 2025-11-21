@@ -4,6 +4,8 @@ using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Configuration.
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.IAM.Domain.Models;
 using WASD.QLicPlatform.API.Usage_Management.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate;
+using WASD.QLicPlatform.API.Anomalies.Infrastructure.Persistence.EFC.Configuration;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
@@ -12,6 +14,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
     
     // Agregar el DbSet para Users
+    // Agregar el DbSet para Anomalies
+    public DbSet<Anomaly> Anomalies { get; set; }
+    
     public DbSet<UserAggregate> Users { get; set; }
     
     /// <summary>
@@ -48,6 +53,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         
         // Aplicar configuración de IAM
         builder.ApplyConfiguration(new WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Configuration.UserConfiguration());
+        
+        // Anomalies Context
+        builder.ApplyConfiguration(new AnomalyConfiguration());
         
         // Alerts Context
         builder.ApplyAlertsConfiguration();
