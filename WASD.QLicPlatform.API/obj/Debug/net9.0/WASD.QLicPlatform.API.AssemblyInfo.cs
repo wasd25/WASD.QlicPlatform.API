@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WASD.QLicPlatform.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0eb68ed5206743c28e6c70e2faf37440b395f360")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5dca6345f7c576f3dbed7fb9e396b7ce742d0711")]
 [assembly: System.Reflection.AssemblyProductAttribute("WASD.QLicPlatform.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WASD.QLicPlatform.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
