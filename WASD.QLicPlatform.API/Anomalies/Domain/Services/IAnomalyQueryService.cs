@@ -29,25 +29,6 @@ namespace WASD.QLicPlatform.API.Anomalies.Domain.Services
             int? profileId = null);
     }
 }
-// WASD.QLicPlatform.API/Anomalies/Domain/Model/Aggregate/Anomaly.cs
-using System;
-using WASD.QLicPlatform.API.Shared.Domain.Enums;
-
-namespace WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate
-{
-    public class Anomaly
-    {
-        public Guid Id { get; private set; }
-        public int ProfileId { get; private set; }
-        public AnomalyType Type { get; private set; }
-        public int Severity { get; private set; }
-        public DateTime DetectedAt { get; private set; }
-        public string Description { get; private set; }
-        public string? Metadata { get; private set; }
-        public AnomalyStatus Status { get; private set; }
-        public DateTime? ResolvedAt { get; private set; }
-
-        protected Anomaly() { }
 
         public Anomaly(
             Guid id,

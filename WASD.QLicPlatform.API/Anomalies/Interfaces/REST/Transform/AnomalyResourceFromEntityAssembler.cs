@@ -1,4 +1,7 @@
-﻿
+﻿// WASD.QLicPlatform.API/Anomalies/Interfaces/REST/Transform/AnomalyResourceFromEntityAssembler.cs
+using WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate;
+using WASD.QLicPlatform.API.Anomalies.Interfaces.REST.Resources;
+
 namespace WASD.QLicPlatform.API.Anomalies.Interfaces.REST.Transform
 {
     public static class AnomalyResourceFromEntityAssembler
@@ -20,7 +23,4 @@ namespace WASD.QLicPlatform.API.Anomalies.Interfaces.REST.Transform
         }
     }
 }
-// WASD.QLicPlatform.API/Anomalies/Interfaces/REST/Transform/AnomalyResourceFromEntityAssembler.cs
-using WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate;
-using WASD.QLicPlatform.API.Anomalies.Interfaces.REST.Resources;
 
