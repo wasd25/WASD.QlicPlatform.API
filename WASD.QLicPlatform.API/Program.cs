@@ -7,6 +7,9 @@ using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 // Importaciones para Anomalies
 using WASD.QLicPlatform.API.Anomalies.Domain.Repositories;
@@ -22,11 +25,12 @@ using WASD.QLicPlatform.API.IAM.Infrastructure.Services;
 using WASD.QLicPlatform.API.Profile.Domain.Repositories;
 using WASD.QLicPlatform.API.Profile.Infrastructure.Persistence.Repositories;
 
-using WASD.QLicPlatform.API.Alerts.Application.Internal.CommandServices;
-using WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
-using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
-using WASD.QLicPlatform.API.Alerts.Domain.Services;
-using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
+// Alerts module not implemented yet
+// using WASD.QLicPlatform.API.Alerts.Application.Internal.CommandServices;
+// using WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
+// using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
+// using WASD.QLicPlatform.API.Alerts.Domain.Services;
+// using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +56,30 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             .LogTo(Console.WriteLine, LogLevel.Error);
 });
 
+// JWT Authentication Configuration
+var jwtSecretKey = builder.Configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not found.");
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "qlic-platform";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "qlic-users";
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSecretKey)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
 // Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -75,6 +103,32 @@ builder.Services.AddSwaggerGen(options =>
             }
         });
     options.EnableAnnotations();
+    
+    // Agregar definición de seguridad JWT
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Ingrese 'Bearer' [espacio] y luego su token JWT en el campo de texto a continuación.\r\n\r\nEjemplo: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\""
+    });
+    
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
 // Dependency Injection
@@ -117,6 +171,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
