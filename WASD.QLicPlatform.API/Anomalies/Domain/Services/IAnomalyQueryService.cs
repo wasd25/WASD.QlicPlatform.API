@@ -30,44 +30,4 @@ namespace WASD.QLicPlatform.API.Anomalies.Domain.Services
     }
 }
 
-        public Anomaly(
-            Guid id,
-            int profileId,
-            AnomalyType type,
-            int severity,
-            DateTime detectedAt,
-            string description,
-            string? metadata)
-        {
-            if (profileId <= 0)
-                throw new ArgumentOutOfRangeException(nameof(profileId), "ProfileId must be greater than 0");
-            if (severity < 1 || severity > 5)
-                throw new ArgumentOutOfRangeException(nameof(severity), "Severity must be between 1 and 5");
-            if (string.IsNullOrWhiteSpace(description))
-                throw new ArgumentException("Description cannot be empty", nameof(description));
-
-            Id = id;
-            ProfileId = profileId;
-            Type = type;
-            Severity = severity;
-            DetectedAt = detectedAt;
-            Description = description;
-            Metadata = metadata;
-            Status = AnomalyStatus.Unresolved;
-            ResolvedAt = null;
-        }
-
-        public void Resolve(DateTime resolvedAt)
-        {
-            Status = AnomalyStatus.Resolved;
-            ResolvedAt = resolvedAt;
-        }
-
-        public void Dismiss()
-        {
-            Status = AnomalyStatus.Dismissed;
-            ResolvedAt = DateTime.UtcNow;
-        }
-    }
-}
 
