@@ -1,6 +1,97 @@
-@WASD.QLicPlatform.API_HostAddress = http://localhost:5125
+### WASD QLic Platform API - Anomalies Tests
+@host = http://localhost:5217
+@contentType = application/json
 
-GET {{WASD.QLicPlatform.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Health Check
+GET {{host}}/swagger/index.html
 
-###
+###############################################
+# Anomalies Endpoints
+###############################################
+
+### 1. POST - Create a new Anomaly
+POST {{host}}/api/anomaly
+Content-Type: {{contentType}}
+
+{
+  "profileId": 1,
+  "type": 1,
+  "severity": 3,
+  "detectedAt": "2025-11-21T19:49:27.083Z",
+  "description": "Fuga detectada en sensor principal - Zona A",
+  "metadata": "{\"sensorId\": \"S001\", \"location\": \"Zone A\", \"pressure\": 85}"
+}
+
+### 2. GET - Get All Anomalies
+GET {{host}}/api/anomaly
+Content-Type: {{contentType}}
+
+### 3. GET - Get All Anomalies with filters
+GET {{host}}/api/anomaly?profileId=1&page=1&pageSize=10
+Content-Type: {{contentType}}
+
+### 4. GET - Get Anomaly by ID (replace with actual ID from POST response)
+@anomalyId = 06a8abab-0728-4722-9ff3-cf807b8decc8
+GET {{host}}/api/anomaly/{{anomalyId}}
+Content-Type: {{contentType}}
+
+### 5. GET - Get Anomalies by Status (Unresolved = 1, Resolved = 2, Dismissed = 3)
+GET {{host}}/api/anomaly/status/1
+Content-Type: {{contentType}}
+
+### 6. GET - Get Anomalies Trend
+GET {{host}}/api/anomaly/trend?from=2025-11-01&to=2025-11-30
+Content-Type: {{contentType}}
+
+### 7. PUT - Update Anomaly Status to Resolved
+PUT {{host}}/api/anomaly/{{anomalyId}}/status
+Content-Type: {{contentType}}
+
+{
+  "newStatus": 2,
+  "resolvedAt": "2025-11-21T20:00:00.000Z"
+}
+
+### 8. PUT - Update Anomaly Status to Dismissed
+PUT {{host}}/api/anomaly/{{anomalyId}}/status
+Content-Type: {{contentType}}
+
+{
+  "newStatus": 3
+}
+
+### 9. DELETE - Delete an Anomaly
+DELETE {{host}}/api/anomaly/{{anomalyId}}
+Content-Type: {{contentType}}
+
+###############################################
+# Test Sequence with New Anomaly
+###############################################
+
+### Step 1: Create a test anomaly
+POST {{host}}/api/anomaly
+Content-Type: {{contentType}}
+
+{
+  "profileId": 1,
+  "type": 1,
+  "severity": 4,
+  "detectedAt": "2025-11-21T20:00:00.000Z",
+  "description": "Test anomaly - Alta presión detectada",
+  "metadata": "{\"sensorId\": \"S002\", \"location\": \"Zone B\", \"pressure\": 120}"
+}
+
+### Step 2: Get all anomalies to see the new one
+GET {{host}}/api/anomaly
+Content-Type: {{contentType}}
+
+### Step 3: Update status to Resolved (use ID from Step 1 response)
+# Replace {{anomalyId}} with actual ID
+PUT {{host}}/api/anomaly/{{anomalyId}}/status
+Content-Type: {{contentType}}
+
+{
+  "newStatus": 2,
+  "resolvedAt": "2025-11-21T20:30:00.000Z"
+}
+
