@@ -1,4 +1,4 @@
-﻿// WASD.QLicPlatform.API/Anomalies/Interfaces/REST/AnomalyController.cs
+﻿﻿// WASD.QLicPlatform.API/Anomalies/Interfaces/REST/AnomalyController.cs
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -25,10 +25,21 @@ namespace WASD.QLicPlatform.API.Anomalies.Interfaces.REST
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateAnomalyResource resource)
         {
-            var command = CreateAnomalyCommandFromResourceAssembler.ToCommand(resource);
-            var anomaly = await _commandService.HandleAsync(command);
-            var anomalyResource = AnomalyResourceFromEntityAssembler.ToResource(anomaly);
-            return CreatedAtAction(nameof(GetById), new { id = anomaly.Id }, anomalyResource);
+            try
+            {
+                var command = CreateAnomalyCommandFromResourceAssembler.ToCommand(resource);
+                var anomaly = await _commandService.HandleAsync(command);
+                var anomalyResource = AnomalyResourceFromEntityAssembler.ToResource(anomaly);
+                return CreatedAtAction(nameof(GetById), new { id = anomaly.Id }, anomalyResource);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet("{id:guid}")]
@@ -49,10 +60,21 @@ namespace WASD.QLicPlatform.API.Anomalies.Interfaces.REST
         [HttpPatch("{id:guid}/status")]
         public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateAnomalyStatusResource resource)
         {
-            var command = UpdateAnomalyStatusCommandFromResourceAssembler.ToCommand(id, resource);
-            var anomaly = await _commandService.HandleAsync(command);
-            if (anomaly == null) return NotFound();
-            return Ok(AnomalyResourceFromEntityAssembler.ToResource(anomaly));
+            try
+            {
+                var command = UpdateAnomalyStatusCommandFromResourceAssembler.ToCommand(id, resource);
+                var anomaly = await _commandService.HandleAsync(command);
+                if (anomaly == null) return NotFound(new { message = "Anomaly not found" });
+                return Ok(AnomalyResourceFromEntityAssembler.ToResource(anomaly));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id:guid}")]

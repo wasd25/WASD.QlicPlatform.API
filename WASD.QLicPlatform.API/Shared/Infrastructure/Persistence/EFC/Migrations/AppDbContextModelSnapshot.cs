@@ -2,12 +2,13 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
 #nullable disable
 
-namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Migrations
+namespace WASD.QLicPlatform.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -19,12 +20,69 @@ namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Migrations
                 .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate.Anomaly", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("description");
+
+                    b.Property<DateTime>("DetectedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("detected_at");
+
+                    b.Property<string>("Metadata")
+                        .HasColumnType("longtext")
+                        .HasColumnName("metadata");
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int")
+                        .HasColumnName("profile_id");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("resolved_at");
+
+                    b.Property<int>("Severity")
+                        .HasColumnType("int")
+                        .HasColumnName("severity");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_anomalies");
+
+                    b.HasIndex("DetectedAt")
+                        .HasDatabaseName("ix_anomalies_detected_at");
+
+                    b.HasIndex("ProfileId", "Status")
+                        .HasDatabaseName("ix_anomalies_profile_status");
+
+                    b.ToTable("anomalies", (string)null);
+                });
+
             modelBuilder.Entity("WASD.QLicPlatform.API.IAM.Domain.Models.UserAggregate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")

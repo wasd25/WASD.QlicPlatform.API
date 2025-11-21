@@ -1,4 +1,4 @@
-﻿// WASD.QLicPlatform.API/Anomalies/Application/Internal/CommandServices/AnomalyCommandService.cs
+﻿﻿// WASD.QLicPlatform.API/Anomalies/Application/Internal/CommandServices/AnomalyCommandService.cs
 using System;
 using System.Threading.Tasks;
 using WASD.QLicPlatform.API.Anomalies.Domain.Commands;
@@ -37,6 +37,12 @@ namespace WASD.QLicPlatform.API.Anomalies.Application.Internal.CommandServices
             var anomaly = await _repository.GetByIdAsync(command.AnomalyId);
             if (anomaly is null) return null;
 
+            // Validar que el status sea válido
+            if (!Enum.IsDefined(typeof(Shared.Domain.Enums.AnomalyStatus), command.NewStatus))
+            {
+                throw new ArgumentException($"Invalid status value: {command.NewStatus}");
+            }
+
             switch (command.NewStatus)
             {
                 case Shared.Domain.Enums.AnomalyStatus.Resolved:
@@ -45,8 +51,11 @@ namespace WASD.QLicPlatform.API.Anomalies.Application.Internal.CommandServices
                 case Shared.Domain.Enums.AnomalyStatus.Dismissed:
                     anomaly.Dismiss();
                     break;
+                case Shared.Domain.Enums.AnomalyStatus.Unresolved:
+                    // No hacer nada, ya está en estado Unresolved
+                    break;
                 default:
-                    throw new InvalidOperationException("Unsupported status update.");
+                    throw new InvalidOperationException($"Unsupported status update: {command.NewStatus}");
             }
 
             await _repository.UpdateAsync(anomaly);
