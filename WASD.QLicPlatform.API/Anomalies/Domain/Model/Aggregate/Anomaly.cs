@@ -11,7 +11,7 @@ namespace WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate
         public AnomalyType Type { get; private set; }
         public int Severity { get; private set; }
         public DateTime DetectedAt { get; private set; }
-        public string Description { get; private set; }
+        public string Description { get; private set; } = string.Empty;
         public string? Metadata { get; private set; }
         public AnomalyStatus Status { get; private set; }
         public DateTime? ResolvedAt { get; private set; }

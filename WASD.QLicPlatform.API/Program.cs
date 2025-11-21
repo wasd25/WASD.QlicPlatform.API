@@ -143,9 +143,9 @@ builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 
 //Registrar servicios de IAM
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
-// Anomaly Bounded Context
 
 // Shared Bounded Context 
 
