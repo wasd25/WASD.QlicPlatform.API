@@ -6,29 +6,25 @@ using WASD.QLicPlatform.API.IAM.Domain.Models;
 using WASD.QLicPlatform.API.Usage_Management.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate;
 using WASD.QLicPlatform.API.Anomalies.Infrastructure.Persistence.EFC.Configuration;
+using WASD.QLicPlatform.API.Reports.Domain.Model.Aggregates;
+using WASD.QLicPlatform.API.Reports.Infrastructure.Persistence.EFC.Configuration.Extensions;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
-
 public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
-    
-    // Agregar el DbSet para Users
-    // Agregar el DbSet para Anomalies
-    public DbSet<Anomaly> Anomalies { get; set; }
-    
     public DbSet<UserAggregate> Users { get; set; }
-    
+    public DbSet<Anomaly> Anomalies { get; set; }
+
+    public DbSet<Report> Reports { get; set; }
+    public DbSet<ReportSummary> ReportSummaries { get; set; }
+    public DbSet<UsageTrend> ReportSummaryUsageTrends { get; set; }
+    public DbSet<CostBreakdown> ReportSummaryCostBreakdown { get; set; }
+    public DbSet<EfficiencyMetrics> ReportSummaryEfficiencyMetrics { get; set; }
+
     /// <summary>
     ///     On configuring the database context
     /// </summary>
-    /// <remarks>
-    ///     This method is used to configure the database context.
-    ///     It also adds the created and updated date interceptor to the database context.
-    /// </remarks>
-    /// <param name="builder">
-    ///     The option builder for the database context
-    /// </param>
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
         builder.AddCreatedUpdatedInterceptor();
@@ -38,35 +34,28 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     /// <summary>
     ///     On creating the database model
     /// </summary>
-    /// <remarks>
-    ///     This method is used to create the database model for the application.
-    /// </remarks>
-    /// <param name="builder">
-    ///     The model builder for the database context
-    /// </param>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         // General Naming Convention for the database objects
         builder.UseSnakeCaseNamingConvention();
-        
-        // Aplicar configuración de IAM
+
+        // IAM
         builder.ApplyConfiguration(new WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Configuration.UserConfiguration());
-        
-        // Anomalies Context
+
+        // Anomalies
         builder.ApplyConfiguration(new AnomalyConfiguration());
-        
-        // Alerts Context
+
+        // Alerts
         builder.ApplyAlertsConfiguration();
-        
-        // Usage Management Context
-        
-        // Usage Summary
+
+        // Usage Management
         builder.ApplyUsageSummaryConfiguration();
-        
-        // Usage Events
         builder.ApplyUsageEventsConfiguration();
+
+        // Reports
+        builder.ApplyReportsConfiguration();
+        builder.ApplyReportSummariesConfiguration();
     }
-    
 }
