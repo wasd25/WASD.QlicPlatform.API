@@ -1,13 +1,27 @@
-﻿using WASD.QLicPlatform.API.IAM.Domain.Models;
+using WASD.QLicPlatform.API.IAM.Domain.Model.Aggregates;
 using WASD.QLicPlatform.API.Shared.Domain.Repositories;
 
 namespace WASD.QLicPlatform.API.IAM.Domain.Repositories;
 
-public interface IUserRepository : IBaseRepository<UserAggregate>
+/// <summary>
+///     The user repository
+/// </summary>
+/// <remarks>
+///     This repository is used to manage users
+/// </remarks>
+public interface IUserRepository : IBaseRepository<User>
 {
-    Task<UserAggregate?> FindByUsernameAsync(string username);
-    Task<UserAggregate?> FindByEmailAsync(string email);
-    Task<bool> ExistsByUsernameAsync(string username);
-    Task<bool> ExistsByEmailAsync(string email);
-    Task<UserAggregate?> FindByUsernameOrEmailAsync(string usernameOrEmail);
+    /// <summary>
+    ///     Find a user by username
+    /// </summary>
+    /// <param name="username">The username to search</param>
+    /// <returns>The user</returns>
+    Task<User?> FindByUsernameAsync(string username);
+
+    /// <summary>
+    ///     Check if a user exists by username
+    /// </summary>
+    /// <param name="username">The username to search</param>
+    /// <returns>True if the user exists, false otherwise</returns>
+    bool ExistsByUsername(string username);
 }

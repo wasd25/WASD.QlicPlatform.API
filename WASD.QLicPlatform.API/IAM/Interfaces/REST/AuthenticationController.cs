@@ -1,67 +1,61 @@
-﻿using Cortex.Mediator;
-using Microsoft.AspNetCore.Mvc;
-using WASD.QLicPlatform.API.IAM.Application.Commands.LoginUser;
-using WASD.QLicPlatform.API.IAM.Application.Commands.RegisterUser;
+using System.Net.Mime;
+using WASD.QLicPlatform.API.IAM.Domain.Services;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
 using WASD.QLicPlatform.API.IAM.Interfaces.REST.Resources;
+using WASD.QLicPlatform.API.IAM.Interfaces.REST.Transform;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace WASD.QLicPlatform.API.IAM.Interfaces.REST;
 
+/// <summary>
+/// Controller for authentication operations.
+/// </summary>
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
-public class AuthenticationController : ControllerBase
+[Produces(MediaTypeNames.Application.Json)]
+[SwaggerTag("Available Authentication endpoints")]
+public class AuthenticationController(IUserCommandService userCommandService) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public AuthenticationController(IMediator mediator)
+    /// <summary>
+    ///     Sign in endpoint. It allows authenticating a user
+    /// </summary>
+    /// <param name="signInResource">The sign-in resource containing username and password.</param>
+    /// <returns>The authenticated user resource, including a JWT token</returns>
+    [HttpPost("sign-in")]
+    [AllowAnonymous]
+    [SwaggerOperation(
+        Summary = "Sign in",
+        Description = "Sign in a user",
+        OperationId = "SignIn")]
+    [SwaggerResponse(StatusCodes.Status200OK, "The user was authenticated", typeof(AuthenticatedUserResource))]
+    public async Task<IActionResult> SignIn([FromBody] SignInResource signInResource)
     {
-        _mediator = mediator;
+        var signInCommand = SignInCommandFromResourceAssembler.ToCommandFromResource(signInResource);
+        var authenticatedUser = await userCommandService.Handle(signInCommand);
+        var resource =
+            AuthenticatedUserResourceFromEntityAssembler.ToResourceFromEntity(authenticatedUser.user,
+                authenticatedUser.token);
+        return Ok(resource);
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterUserResource resource)
+    /// <summary>
+    ///     Sign up endpoint. It allows creating a new user
+    /// </summary>
+    /// <param name="signUpResource">The sign-up resource containing username and password.</param>
+    /// <returns>A confirmation message on successful creation.</returns>
+    [HttpPost("sign-up")]
+    [AllowAnonymous]
+    [SwaggerOperation(
+        Summary = "Sign-up",
+        Description = "Sign up a new user",
+        OperationId = "SignUp")]
+    [SwaggerResponse(StatusCodes.Status200OK, "The user was created successfully")]
+    public async Task<IActionResult> SignUp([FromBody] SignUpResource signUpResource)
     {
-        var command = new RegisterUserCommand(
-            resource.Username,
-            resource.Email,
-            resource.Password,
-            resource.ConfirmPassword
-        );
-
-        try
-        {
-            await _mediator.SendCommandAsync(command);
-            return Ok(new { message = "User registered successfully" });
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
-        catch (Exception) // Removemos la variable 'ex' no usada
-        {
-            return StatusCode(500, new { message = "An error occurred while registering user" });
-        }
-    }
-
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginUserResource resource)
-    {
-        var command = new LoginUserCommand(
-            resource.UsernameOrEmail,
-            resource.Password
-        );
-
-        try
-        {
-            var token = await _mediator.SendCommandAsync<LoginUserCommand, string>(command);
-            return Ok(new { token = token, message = "Login successful" });
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(new { message = ex.Message });
-        }
-        catch (Exception) // Removemos la variable 'ex' no usada
-        {
-            return StatusCode(500, new { message = "An error occurred while logging in" });
-        }
+        var signUpCommand = SignUpCommandFromResourceAssembler.ToCommandFromResource(signUpResource);
+        await userCommandService.Handle(signUpCommand);
+        return Ok(new { message = "User created successfully" });
     }
 }

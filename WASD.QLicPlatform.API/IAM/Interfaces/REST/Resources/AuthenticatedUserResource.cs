@@ -1,8 +1,9 @@
-﻿namespace WASD.QLicPlatform.API.IAM.Interfaces.REST.Resources;
+namespace WASD.QLicPlatform.API.IAM.Interfaces.REST.Resources;
 
-public record AuthenticatedUserResource(
-    int Id,
-    string Username,
-    string Email,
-    string Token
-);
+/// <summary>
+/// Resource representing an authenticated user.
+/// </summary>
+/// <param name="Id">The unique identifier of the user.</param>
+/// <param name="Username">The username of the user.</param>
+/// <param name="Token">The JWT token for the authenticated user.</param>
+public record AuthenticatedUserResource(int Id, string Username, string Token);

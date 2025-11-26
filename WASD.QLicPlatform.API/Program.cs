@@ -21,17 +21,13 @@ using WASD.QLicPlatform.API.Anomalies.Infrastructure.Persistence.EFC.Repositorie
 using WASD.QLicPlatform.API.Anomalies.Domain.Services;
 using WASD.QLicPlatform.API.Anomalies.Application.Internal.CommandServices;
 using WASD.QLicPlatform.API.Anomalies.Application.Internal.QueryServices;
-using WASD.QLicPlatform.API.IAM.Application.Services;
-using WASD.QLicPlatform.API.IAM.Domain.Repositories;
-using WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Repositories;
-using WASD.QLicPlatform.API.IAM.Infrastructure.Services;
-using WASD.QLicPlatform.API.Profile.Domain.Repositories;
-using WASD.QLicPlatform.API.Profile.Infrastructure.Persistence.Repositories;
 using WASD.QLicPlatform.API.Alerts.Application.Internal.CommandServices;
 using WASD.QLicPlatform.API.Alerts.Application.Internal.QueryServices;
 using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
 using WASD.QLicPlatform.API.Alerts.Domain.Services;
 using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Interfaces.ASP.Configuration.Extensions;
+using WASD.QLicPlatform.API.Profiles.Infrastructure.Interfaces.ASP.Configuration.Extensions;
 using WASD.QLicPlatform.API.Usage_Management.Application.CommandServices;
 using WASD.QLicPlatform.API.Usage_Management.Application.QueryServices;
 using WASD.QLicPlatform.API.Usage_Management.Domain.Repositories;
@@ -159,13 +155,11 @@ builder.Services.AddAuthentication(options =>
 // -----------------------------
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// Profile
-builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+// Profiles
+builder.AddProfilesContextServices();
 
 // IAM
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
-builder.Services.AddScoped<ITokenService, JwtTokenService>();
+builder.AddIamContextServices();
 
 // Alerts
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
@@ -178,7 +172,7 @@ builder.Services.AddScoped<IUsageSummaryCommandService, UsageSummaryCommandServi
 builder.Services.AddScoped<IUsageSummaryQueryService, UsageSummaryQueryService>();
 builder.Services.AddScoped<IUsageEventsRepository, UsageEventsRepository>();
 builder.Services.AddScoped<IUsageEventCommandService, UsageEventsCommandService>();
-builder.Services.AddScoped<IUsageEventQueryService, UsageEventQueryService>();
+builder.Services.AddScoped<IUsageEventQueryService, UsageEventsQueryService>();
 
 // Anomalies
 builder.Services.AddScoped<IAnomalyRepository, AnomalyRepository>();

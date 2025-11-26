@@ -1,36 +1,61 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WASD.QLicPlatform.API.IAM.Domain.Repositories;
+using System.Net.Mime;
+using WASD.QLicPlatform.API.IAM.Domain.Model.Queries;
+using WASD.QLicPlatform.API.IAM.Domain.Services;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Pipeline.Middleware.Attributes;
+using WASD.QLicPlatform.API.IAM.Interfaces.REST.Resources;
 using WASD.QLicPlatform.API.IAM.Interfaces.REST.Transform;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace WASD.QLicPlatform.API.IAM.Interfaces.REST;
 
+/// <summary>
+///     The user's controller
+/// </summary>
+/// <remarks>
+///     This class is used to handle user requests
+/// </remarks>
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
-public class UsersController : ControllerBase
+[Produces(MediaTypeNames.Application.Json)]
+[SwaggerTag("Available User endpoints")]
+public class UsersController(IUserQueryService userQueryService) : ControllerBase
 {
-    private readonly IUserRepository _userRepository;
-
-    public UsersController(IUserRepository userRepository)
-    {
-        _userRepository = userRepository;
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetAllUsers()
-    {
-        var users = await _userRepository.ListAsync();
-        var resources = users.Select(UserResourceFromEntityAssembler.ToResourceFromEntity);
-        return Ok(resources);
-    }
-
+    /// <summary>
+    ///     Get user by id endpoint. It allows to get a user by id
+    /// </summary>
+    /// <param name="id">The user id</param>
+    /// <returns>The user resource</returns>
     [HttpGet("{id}")]
+    [SwaggerOperation(
+        Summary = "Get a user by its id",
+        Description = "Get a user by its id",
+        OperationId = "GetUserById")]
+    [SwaggerResponse(StatusCodes.Status200OK, "The user was found", typeof(UserResource))]
     public async Task<IActionResult> GetUserById(int id)
     {
-        var user = await _userRepository.FindByIdAsync(id);
-        if (user == null)
-            return NotFound(new { message = "User not found" });
+        var getUserByIdQuery = new GetUserByIdQuery(id);
+        var user = await userQueryService.Handle(getUserByIdQuery);
+        var userResource = UserResourceFromEntityAssembler.ToResourceFromEntity(user!);
+        return Ok(userResource);
+    }
 
-        var resource = UserResourceFromEntityAssembler.ToResourceFromEntity(user);
-        return Ok(resource);
+    /// <summary>
+    ///     Get all users' endpoint. It allows getting all users
+    /// </summary>
+    /// <returns>The user resources</returns>
+    [HttpGet]
+    [SwaggerOperation(
+        Summary = "Get all users",
+        Description = "Get all users",
+        OperationId = "GetAllUsers")]
+    [SwaggerResponse(StatusCodes.Status200OK, "The users were found", typeof(IEnumerable<UserResource>))]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var getAllUsersQuery = new GetAllUsersQuery();
+        var users = await userQueryService.Handle(getAllUsersQuery);
+        var userResources = users.Select(UserResourceFromEntityAssembler.ToResourceFromEntity);
+        return Ok(userResources);
     }
 }
