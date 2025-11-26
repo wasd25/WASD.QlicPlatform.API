@@ -2,18 +2,24 @@ using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
 using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
-using WASD.QLicPlatform.API.IAM.Domain.Models;
 using WASD.QLicPlatform.API.Usage_Management.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate;
 using WASD.QLicPlatform.API.Anomalies.Infrastructure.Persistence.EFC.Configuration;
+using WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using WASD.QLicPlatform.API.Profiles.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Reports.Domain.Model.Aggregates;
 using WASD.QLicPlatform.API.Reports.Infrastructure.Persistence.EFC.Configuration.Extensions;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
+/// <summary>
+///     Application database context for the Learning Center Platform
+/// </summary>
+/// <param name="options">
+///     The options for the database context
+/// </param>
 public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<UserAggregate> Users { get; set; }
     public DbSet<Anomaly> Anomalies { get; set; }
 
     public DbSet<Report> Reports { get; set; }
@@ -42,7 +48,10 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.UseSnakeCaseNamingConvention();
 
         // IAM
-        builder.ApplyConfiguration(new WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.Configuration.UserConfiguration());
+        builder.ApplyIamConfiguration();
+        
+        // Profiles
+        builder.ApplyProfilesConfiguration();
 
         // Anomalies
         builder.ApplyConfiguration(new AnomalyConfiguration());
