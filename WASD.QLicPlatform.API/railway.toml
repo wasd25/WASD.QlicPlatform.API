@@ -1,10 +1,8 @@
 ﻿[build]
-builder = "nixpacks"
+builder = "DOCKERFILE"
+dockerfilePath = "./WASD.QLicPlatform.API/Dockerfile"
 
 [deploy]
-startCommand = "dotnet WASD.QLicPlatform.API/WASD.QLicPlatform.API.dll"
+startCommand = "./WASD.QLicPlatform.API/WASD.QLicPlatform.API"
 healthcheckPath = "/swagger"
-
-[[services]]
-name = "web"
-sourcePath = "WASD.QLicPlatform.API"
+healthcheckTimeout = 300
