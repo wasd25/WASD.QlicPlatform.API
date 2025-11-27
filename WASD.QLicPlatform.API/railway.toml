@@ -1,11 +1,8 @@
 ﻿[build]
-builder = "nixpacks"
-
-[build.environment]
-DOTNET_VERSION = "9.0"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "dotnet WASD.QLicPlatform.API.dll"
 healthcheckPath = "/swagger"
 healthcheckTimeout = 120
 
