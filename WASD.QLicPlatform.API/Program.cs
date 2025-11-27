@@ -27,6 +27,11 @@ using WASD.QLicPlatform.API.Alerts.Domain.Repositories;
 using WASD.QLicPlatform.API.Alerts.Domain.Services;
 using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Repositories;
 using WASD.QLicPlatform.API.IAM.Infrastructure.Interfaces.ASP.Configuration.Extensions;
+using WASD.QLicPlatform.API.Payments.Application.Internal.CommandServices;
+using WASD.QLicPlatform.API.Payments.Application.Internal.QueryServices;
+using WASD.QLicPlatform.API.Payments.Domain.Repositories;
+using WASD.QLicPlatform.API.Payments.Domain.Services;
+using WASD.QLicPlatform.API.Payments.Infrastructure.Persistence.EFC.Repositories;
 using WASD.QLicPlatform.API.Profiles.Infrastructure.Interfaces.ASP.Configuration.Extensions;
 using WASD.QLicPlatform.API.Usage_Management.Application.CommandServices;
 using WASD.QLicPlatform.API.Usage_Management.Application.QueryServices;
@@ -183,6 +188,21 @@ builder.Services.AddScoped<IAnomalyQueryService, AnomalyQueryService>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<ReportCommandService>();
 builder.Services.AddScoped<ReportQueryService>();
+
+// Payments
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IPaymentQueryService, PaymentQueryService>();
+builder.Services.AddScoped<IPaymentCommandService, PaymentCommandService>();
+
+// Payment Methods
+builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+builder.Services.AddScoped<IPaymentMethodQueryService, PaymentMethodQueryService>();
+builder.Services.AddScoped<IPaymentMethodCommandService, PaymentMethodCommandService>();
+
+// Billing Settings
+builder.Services.AddScoped<IBillingSettingRepository, BillingSettingRepository>();
+builder.Services.AddScoped<IBillingSettingQueryService, BillingSettingQueryService>();
+builder.Services.AddScoped<IBillingSettingCommandService, BillingSettingCommandService>();
 
 //
 // -----------------------------
