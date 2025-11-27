@@ -1,13 +1,9 @@
-﻿[build]
-builder = "nixpacks"
-
-[build.environment]
-DOTNET_VERSION = "9.0"
+﻿# railway.toml
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "./WASD.QLicPlatform.API/Dockerfile"
 
 [deploy]
-startCommand = "dotnet WASD.QLicPlatform.API.dll"
+startCommand = "./WASD.QLicPlatform.API/WASD.QLicPlatform.API"
 healthcheckPath = "/swagger"
-healthcheckTimeout = 120
-
-[[services]]
-name = "web"
+healthcheckTimeout = 300
