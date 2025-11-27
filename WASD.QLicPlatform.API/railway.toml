@@ -1,12 +1,13 @@
 ﻿[build]
 builder = "nixpacks"
 
+[build.environment]
+DOTNET_VERSION = "9.0"
+
 [deploy]
+startCommand = "dotnet WASD.QLicPlatform.API.dll"
 healthcheckPath = "/swagger"
 healthcheckTimeout = 120
 
 [[services]]
 name = "web"
-
-[services.env]
-ASPNETCORE_ENVIRONMENT = "Production"
