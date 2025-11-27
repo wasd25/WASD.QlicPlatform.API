@@ -1,6 +1,5 @@
 ﻿[build]
-builder = "DOCKERFILE"
-dockerfilePath = "./Dockerfile"
+builder = "nixpacks"
 
 [deploy]
 healthcheckPath = "/swagger"
