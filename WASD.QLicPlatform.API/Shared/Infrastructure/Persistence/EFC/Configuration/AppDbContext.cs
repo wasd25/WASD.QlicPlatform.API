@@ -12,6 +12,8 @@ using WASD.QLicPlatform.API.Payments.Infrastructure.Persistence.EFC.Configuratio
 using WASD.QLicPlatform.API.Profiles.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Reports.Domain.Model.Aggregates;
 using WASD.QLicPlatform.API.Reports.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using WASD.QLicPlatform.API.Subscriptions.Domain.Model.Aggregates;
+using WASD.QLicPlatform.API.Subscriptions.Infrastructure.Persistence.EFC.Configuration.Extensions;
 
 namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
@@ -32,6 +34,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<PaymentMethod> PaymentMethods { get; set; }
     
     public DbSet<BillingSetting> BillingSettings { get; set; }
+    
+    public DbSet<Subscription> Subscriptions { get; set; }
         
     public DbSet<ReportSummary> ReportSummaries { get; set; }
     public DbSet<UsageTrend> ReportSummaryUsageTrends { get; set; }
@@ -79,5 +83,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         
         // Payments
         builder.ApplyPaymentsConfiguration();
+        
+        // Subscriptions
+        builder.ApplySubscriptionsConfiguration();
     }
 }
