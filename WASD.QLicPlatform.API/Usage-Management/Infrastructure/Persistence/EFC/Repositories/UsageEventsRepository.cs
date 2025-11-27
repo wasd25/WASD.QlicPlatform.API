@@ -13,7 +13,7 @@ public class UsageEventsRepository(AppDbContext context)
     {
         return await Context.Set<UsageEvents>().Where(u => u.Source == source).ToListAsync();
     }
-    public async Task<UsageEvents?> FindByIdAsync(int id)
+    public new async Task<UsageEvents?> FindByIdAsync(int id)
     {
         return await Context.Set<UsageEvents>().FirstOrDefaultAsync(u => u.Id == id);
     }
