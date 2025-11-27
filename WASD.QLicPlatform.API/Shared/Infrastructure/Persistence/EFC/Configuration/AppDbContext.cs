@@ -6,6 +6,9 @@ using WASD.QLicPlatform.API.Usage_Management.Infrastructure.Persistence.EFC.Conf
 using WASD.QLicPlatform.API.Anomalies.Domain.Model.Aggregate;
 using WASD.QLicPlatform.API.Anomalies.Infrastructure.Persistence.EFC.Configuration;
 using WASD.QLicPlatform.API.IAM.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using WASD.QLicPlatform.API.Payments.Domain.Model.Aggregate;
+using WASD.QLicPlatform.API.Payments.Domain.Model.Aggregates;
+using WASD.QLicPlatform.API.Payments.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Profiles.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Reports.Domain.Model.Aggregates;
 using WASD.QLicPlatform.API.Reports.Infrastructure.Persistence.EFC.Configuration.Extensions;
@@ -23,6 +26,13 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Anomaly> Anomalies { get; set; }
 
     public DbSet<Report> Reports { get; set; }
+    
+    public DbSet<Payment> Payments { get; set; }
+    
+    public DbSet<PaymentMethod> PaymentMethods { get; set; }
+    
+    public DbSet<BillingSetting> BillingSettings { get; set; }
+        
     public DbSet<ReportSummary> ReportSummaries { get; set; }
     public DbSet<UsageTrend> ReportSummaryUsageTrends { get; set; }
     public DbSet<CostBreakdown> ReportSummaryCostBreakdown { get; set; }
@@ -66,5 +76,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         // Reports
         builder.ApplyReportsConfiguration();
         builder.ApplyReportSummariesConfiguration();
+        
+        // Payments
+        builder.ApplyPaymentsConfiguration();
     }
 }
