@@ -1,0 +1,12 @@
+﻿[build]
+builder = "nixpacks"
+watchPatterns = ["**/*.cs", "**/*.csproj"]
+
+[deploy]
+startCommand = "cd WASD.QLicPlatform.API && dotnet WASD.QLicPlatform.API.dll"
+healthcheckPath = "/swagger"
+healthcheckTimeout = 300
+
+[[services]]
+name = "web"
+sourcePath = "WASD.QLicPlatform.API"
