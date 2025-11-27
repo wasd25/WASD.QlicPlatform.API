@@ -33,6 +33,10 @@ using WASD.QLicPlatform.API.Payments.Domain.Repositories;
 using WASD.QLicPlatform.API.Payments.Domain.Services;
 using WASD.QLicPlatform.API.Payments.Infrastructure.Persistence.EFC.Repositories;
 using WASD.QLicPlatform.API.Profiles.Infrastructure.Interfaces.ASP.Configuration.Extensions;
+using WASD.QLicPlatform.API.Subscriptions.Application.Internal.QueryServices;
+using WASD.QLicPlatform.API.Subscriptions.Domain.Repositories;
+using WASD.QLicPlatform.API.Subscriptions.Domain.Services;
+using WASD.QLicPlatform.API.Subscriptions.Infrastructure.Persistence.EFC.Repositories;
 using WASD.QLicPlatform.API.Usage_Management.Application.CommandServices;
 using WASD.QLicPlatform.API.Usage_Management.Application.QueryServices;
 using WASD.QLicPlatform.API.Usage_Management.Domain.Repositories;
@@ -203,6 +207,10 @@ builder.Services.AddScoped<IPaymentMethodCommandService, PaymentMethodCommandSer
 builder.Services.AddScoped<IBillingSettingRepository, BillingSettingRepository>();
 builder.Services.AddScoped<IBillingSettingQueryService, BillingSettingQueryService>();
 builder.Services.AddScoped<IBillingSettingCommandService, BillingSettingCommandService>();
+
+// Subscriptions
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>();
 
 //
 // -----------------------------
