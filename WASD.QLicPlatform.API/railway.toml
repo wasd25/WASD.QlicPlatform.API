@@ -1,8 +1,13 @@
 ﻿[build]
-builder = "DOCKERFILE"
-dockerfilePath = "./WASD.QLicPlatform.API/Dockerfile"
+builder = "nixpacks"
 
 [deploy]
-startCommand = "./WASD.QLicPlatform.API/WASD.QLicPlatform.API"
+startCommand = "dotnet WASD.QLicPlatform.API.dll"
 healthcheckPath = "/swagger"
-healthcheckTimeout = 300
+healthcheckTimeout = 120
+
+[[services]]
+name = "web"
+
+[services.env]
+ASPNETCORE_ENVIRONMENT = "Production"
