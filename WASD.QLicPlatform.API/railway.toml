@@ -1,0 +1,9 @@
+﻿# railway.toml
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "./WASD.QLicPlatform.API/Dockerfile"
+
+[deploy]
+startCommand = "./WASD.QLicPlatform.API/WASD.QLicPlatform.API"
+healthcheckPath = "/swagger"
+healthcheckTimeout = 300

@@ -1,8 +1,8 @@
-﻿namespace WASD.QLicPlatform.API.Reports.Interfaces.REST.Resources
+﻿// Interfaces/REST/Resources/UsageTrendDto.cs
+namespace WASD.QLicPlatform.API.Reports.Interfaces.REST.Resources;
+
+public class UsageTrendDto
 {
-    public class UsageTrendDto
-    {
-        public string Day { get; set; }
-        public int Liters { get; set; }
-    }
+    public DateTime Day { get; set; }  
+    public int Liters { get; set; }
 }

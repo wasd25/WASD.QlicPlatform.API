@@ -14,7 +14,7 @@ public class AlertRepository(AppDbContext context)
         return await Context.Set<Alert>().Where(p => p.Title == title).ToListAsync();
     }
     
-    public async Task<Alert?> FindByIdAsync(int id)
+    public new async Task<Alert?> FindByIdAsync(int id)
     {
         return await Context.Set<Alert>().FirstOrDefaultAsync(p => p.Id == id);
     }

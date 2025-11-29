@@ -23,18 +23,18 @@ public static class ModelBuilderExtensions
             e =>
             {
                 e.WithOwner().HasForeignKey("Id");
-                e.Property(a => a.Address).HasColumnName("EmailAddress");
+                e.Property(a => a.Address).HasColumnName("Email");
             });
 
         builder.Entity<Profile>().OwnsOne(p => p.Address,
             a =>
             {
                 a.WithOwner().HasForeignKey("Id");
-                a.Property(s => s.Street).HasColumnName("AddressStreet");
-                a.Property(s => s.Number).HasColumnName("AddressNumber");
-                a.Property(s => s.City).HasColumnName("AddressCity");
-                a.Property(s => s.PostalCode).HasColumnName("AddressPostalCode");
-                a.Property(s => s.Country).HasColumnName("AddressCountry");
+                a.Property(s => s.Street).HasColumnName("Street");
+                a.Property(s => s.Number).HasColumnName("Number");
+                a.Property(s => s.City).HasColumnName("City");
+                a.Property(s => s.PostalCode).HasColumnName("PostalCode");
+                a.Property(s => s.Country).HasColumnName("Country");
             });
     }
 }

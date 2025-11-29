@@ -3,7 +3,7 @@
 public class UsageTrend
 {
     public long Id { get; set; }
-    public string Day { get; set; } = null!;
+    public DateTime Day { get; set; }   
     public int Liters { get; set; }
 
     public long ReportSummaryId { get; set; }

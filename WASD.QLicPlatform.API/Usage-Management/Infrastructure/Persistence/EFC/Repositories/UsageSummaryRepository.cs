@@ -9,7 +9,7 @@ namespace WASD.QLicPlatform.API.Usage_Management.Infrastructure.Persistence.EFC.
 public class UsageSummaryRepository(AppDbContext context)
     : BaseRepository<UsageSummary>(context), IUsageSummaryRepository
 {
-    public async Task<UsageSummary?> FindByIdAsync(int id)
+    public new async Task<UsageSummary?> FindByIdAsync(int id)
     {
         return await Context.Set<UsageSummary>().FirstOrDefaultAsync(u => u.Id == id);
     }

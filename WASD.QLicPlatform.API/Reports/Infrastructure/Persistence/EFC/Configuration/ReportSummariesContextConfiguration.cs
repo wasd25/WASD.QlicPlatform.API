@@ -18,24 +18,37 @@ public class ReportSummariesContextConfiguration :
         builder.Property(x => x.Type).IsRequired().HasMaxLength(100);
         builder.Property(x => x.Location).IsRequired().HasMaxLength(100);
         builder.Property(x => x.Period).IsRequired().HasMaxLength(100);
+        builder.Property(x => x.Resource).IsRequired().HasMaxLength(100);
+
+        // ✅ Manejo automático de timestamps
+        builder.Property(x => x.CreatedAt)
+               .HasColumnName("created_at")
+               .HasColumnType("datetime(6)")
+               .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.Property(x => x.UpdatedAt)
+               .HasColumnName("updated_at")
+               .HasColumnType("datetime(6)")
+               .HasDefaultValueSql("NULL")
+               .ValueGeneratedOnUpdate();
 
         builder.HasMany(x => x.UsageTrends)
                .WithOne(x => x.ReportSummary!)
                .HasForeignKey(x => x.ReportSummaryId)
                .OnDelete(DeleteBehavior.Cascade)
-               .HasConstraintName("fk_usagetrend_summary"); // 👈 nombre corto
+               .HasConstraintName("fk_usagetrend_summary");
 
         builder.HasMany(x => x.CostBreakdown)
                .WithOne(x => x.ReportSummary!)
                .HasForeignKey(x => x.ReportSummaryId)
                .OnDelete(DeleteBehavior.Cascade)
-               .HasConstraintName("fk_costbreakdown_summary"); // 👈 nombre corto
+               .HasConstraintName("fk_costbreakdown_summary");
 
         builder.HasOne(x => x.EfficiencyMetrics)
                .WithOne(x => x.ReportSummary!)
                .HasForeignKey<EfficiencyMetrics>(x => x.ReportSummaryId)
                .OnDelete(DeleteBehavior.Cascade)
-               .HasConstraintName("fk_efficiency_summary"); // 👈 nombre corto
+               .HasConstraintName("fk_efficiency_summary");
     }
 
     public void Configure(EntityTypeBuilder<UsageTrend> builder)
@@ -43,7 +56,10 @@ public class ReportSummariesContextConfiguration :
         builder.ToTable("report_summary_usage_trends");
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Day).IsRequired().HasMaxLength(10);
+        builder.Property(x => x.Day)
+               .HasColumnType("date") // ✅ MySQL DATE
+               .IsRequired();
+
         builder.Property(x => x.Liters).IsRequired();
     }
 
@@ -53,13 +69,15 @@ public class ReportSummariesContextConfiguration :
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Category).IsRequired().HasMaxLength(50);
-        builder.Property(x => x.Cost).HasColumnType("decimal(12,2)").IsRequired();
+        builder.Property(x => x.Cost)
+               .HasColumnType("decimal(12,2)") // ✅ decimal para MySQL
+               .IsRequired();
 
         builder.HasOne(x => x.ReportSummary)
                .WithMany(x => x.CostBreakdown)
                .HasForeignKey(x => x.ReportSummaryId)
                .OnDelete(DeleteBehavior.Cascade)
-               .HasConstraintName("fk_costbreakdown_summary"); // 👈 nombre corto
+               .HasConstraintName("fk_costbreakdown_summary");
     }
 
     public void Configure(EntityTypeBuilder<EfficiencyMetrics> builder)
@@ -69,12 +87,14 @@ public class ReportSummariesContextConfiguration :
 
         builder.Property(x => x.Score).IsRequired();
         builder.Property(x => x.WaterSaved).IsRequired();
-        builder.Property(x => x.CostSaved).IsRequired();
+        builder.Property(x => x.CostSaved)
+               .HasColumnType("decimal(12,2)") // ✅ ahora decimal
+               .IsRequired();
 
         builder.HasOne(x => x.ReportSummary)
                .WithOne(x => x.EfficiencyMetrics)
                .HasForeignKey<EfficiencyMetrics>(x => x.ReportSummaryId)
                .OnDelete(DeleteBehavior.Cascade)
-               .HasConstraintName("fk_efficiency_summary"); // 👈 nombre corto
+               .HasConstraintName("fk_efficiency_summary");
     }
 }

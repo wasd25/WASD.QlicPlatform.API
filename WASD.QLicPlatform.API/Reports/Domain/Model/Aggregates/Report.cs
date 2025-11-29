@@ -18,6 +18,7 @@ public class Report
         Title = title;
         Description = description;
         CreatedAt = DateTime.UtcNow; 
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public void Update(string title, string description)

@@ -1,9 +1,9 @@
-﻿namespace WASD.QLicPlatform.API.Reports.Interfaces.REST.Resources
+﻿// Interfaces/REST/Resources/EfficiencyMetricsDto.cs
+namespace WASD.QLicPlatform.API.Reports.Interfaces.REST.Resources;
+
+public class EfficiencyMetricsDto
 {
-    public class EfficiencyMetricsDto
-    {
-        public int Score { get; set; }
-        public int WaterSaved { get; set; }
-        public int CostSaved { get; set; }
-    }
+    public int Score { get; set; }
+    public int WaterSaved { get; set; }
+    public decimal CostSaved { get; set; }  // <-- decimal
 }

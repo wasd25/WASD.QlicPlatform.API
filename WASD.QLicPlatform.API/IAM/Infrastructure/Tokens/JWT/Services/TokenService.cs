@@ -2,8 +2,6 @@ using System.Security.Claims;
 using System.Text;
 using WASD.QLicPlatform.API.IAM.Application.OutboundServices;
 using WASD.QLicPlatform.API.IAM.Domain.Model.Aggregates;
-using WASD.QLicPlatform.API.IAM.Infrastructure.Tokens.JWT.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,20 +15,18 @@ namespace WASD.QLicPlatform.API.IAM.Infrastructure.Tokens.JWT.Services;
  *     This class is used to generate and validate tokens
  * </remarks>
  */
-public class TokenService(IOptions<TokenSettings> tokenSettings) : ITokenService
+public class TokenService : ITokenService
 {
-    private readonly TokenSettings _tokenSettings = tokenSettings.Value;
-
-    /**
-     * <summary>
-     *     Generate token
-     * </summary>
-     * <param name="user">The user for token generation</param>
-     * <returns>The generated Token</returns>
-     */
+    private readonly IConfiguration _configuration;
+    
+    public TokenService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+    
     public string GenerateToken(User user)
     {
-        var secret = _tokenSettings.Secret;
+        var secret = _configuration["Jwt:SecretKey"];
         var key = Encoding.ASCII.GetBytes(secret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -64,7 +60,7 @@ public class TokenService(IOptions<TokenSettings> tokenSettings) : ITokenService
             return null;
         // Otherwise, perform validation
         var tokenHandler = new JsonWebTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_tokenSettings.Secret);
+        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]);
         try
         {
             var tokenValidationResult = await tokenHandler.ValidateTokenAsync(token, new TokenValidationParameters

@@ -1,4 +1,5 @@
 using System.Net.Mime;
+using WASD.QLicPlatform.API.Profiles.Domain.Model.Commands;
 using WASD.QLicPlatform.API.Profiles.Domain.Model.Queries;
 using WASD.QLicPlatform.API.Profiles.Domain.Services;
 using WASD.QLicPlatform.API.Profiles.Interfaces.REST.Resources;
@@ -44,6 +45,36 @@ public class ProfilesController(
         if (profile is null) return BadRequest();
         var profileResource = ProfileResourceFromEntityAssembler.ToResourceFromEntity(profile);
         return CreatedAtAction(nameof(GetProfileById), new { profileId = profile.Id }, profileResource);
+    }
+    
+    // --- NUEVO ENDPOINT PUT ---
+    [HttpPut("{profileId:int}")]
+    [SwaggerOperation("Update Profile", "Update an existing profile including Avatar, Age, Phone and Email.", OperationId = "UpdateProfile")]
+    [SwaggerResponse(200, "The profile was updated.", typeof(ProfileResource))]
+    [SwaggerResponse(404, "The profile was not found.")]
+    public async Task<IActionResult> UpdateProfile(int profileId, [FromBody] UpdateProfileResource resource)
+    {
+        var updateProfileCommand = new UpdateProfileCommand(
+            profileId,
+            resource.FirstName,
+            resource.LastName,
+            resource.Email,
+            resource.Street,
+            resource.Number,
+            resource.City,
+            resource.PostalCode,
+            resource.Country,
+            resource.AvatarUrl,
+            resource.Age,
+            resource.Phone
+        );
+
+        var profile = await profileCommandService.Handle(updateProfileCommand);
+        
+        if (profile is null) return NotFound();
+        
+        var profileResource = ProfileResourceFromEntityAssembler.ToResourceFromEntity(profile);
+        return Ok(profileResource);
     }
 
     [HttpGet]

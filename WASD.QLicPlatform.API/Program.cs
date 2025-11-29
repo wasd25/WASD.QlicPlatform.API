@@ -212,6 +212,23 @@ builder.Services.AddScoped<IBillingSettingCommandService, BillingSettingCommandS
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<ISubscriptionQueryService, SubscriptionQueryService>();
 
+
+//cors 
+
+var frontendUrl = builder.Configuration["FrontendUrl"] ?? "https://qlic-frontend.vercel.app";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(frontendUrl, "http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        // .AllowCredentials(); // activar solo si usas cookies/credenciales
+    });
+});
+
+
 //
 // -----------------------------
 // Mediator Configuration
@@ -239,20 +256,18 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
 }
-
-//
-// -----------------------------
-// Middleware Pipeline
-// -----------------------------
-if (app.Environment.IsDevelopment())
+// pipeline — mantener UseCors aquí, antes de UseAuthentication/MapControllers
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "WASD.QLicPlatform.API v1");
+    c.RoutePrefix = string.Empty;
+});
+
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();
