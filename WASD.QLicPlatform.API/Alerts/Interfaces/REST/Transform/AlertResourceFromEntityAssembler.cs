@@ -9,7 +9,7 @@ public class AlertResourceFromEntityAssembler
     {
         return new AlertResource(
             alert.Id, 
-            alert.Type, 
+            alert.AlertType, 
             alert.Title, 
             alert.Message, 
             alert.Timestamp);

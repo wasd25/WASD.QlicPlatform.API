@@ -10,7 +10,7 @@ public static class ModelBuilderExtensions
         // Alerts Context
         builder.Entity<Alert>().HasKey(e => e.Id);
         builder.Entity<Alert>().Property(e => e.Id).IsRequired().ValueGeneratedOnAdd();
-        builder.Entity<Alert>().Property(e => e.Type).IsRequired();
+        builder.Entity<Alert>().Property(e => e.AlertType).IsRequired();
         builder.Entity<Alert>().Property(e => e.Title).IsRequired();
         builder.Entity<Alert>().Property(e => e.Message).IsRequired();
         builder.Entity<Alert>().Property(e => e.Timestamp).IsRequired();

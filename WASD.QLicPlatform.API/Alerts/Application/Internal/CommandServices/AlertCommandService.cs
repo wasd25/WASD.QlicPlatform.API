@@ -41,7 +41,7 @@ public class AlertCommandService(IAlertRepository repository, IUnitOfWork unitOf
 
         if (alert == null) return null;
         
-        alert.Update(command.Type, command.Title, command.Message, command.Timestamp);
+        alert.Update(command.AlertType, command.Title, command.Message, command.Timestamp);
         
         repository.Update(alert);
         
