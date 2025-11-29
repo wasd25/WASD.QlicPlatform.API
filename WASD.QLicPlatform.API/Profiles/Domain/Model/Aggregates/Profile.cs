@@ -22,25 +22,15 @@ public partial class Profile
         Address = new StreetAddress();
     }
 
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="Profile" /> class with the specified details.
-    /// </summary>
-    /// <param name="firstName">The first name of the person.</param>
-    /// <param name="lastName">The last name of the person.</param>
-    /// <param name="email">The email address.</param>
-    /// <param name="street">The street address.</param>
-    /// <param name="city">The city.</param>
-    /// <param name="state">The state or province.</param>
-    /// <param name="postalCode">The postal code.</param>
-    /// <param name="country">The country.</param>
-    public Profile(string firstName, string lastName, string email, string street, string city, string state,
+ 
+    public Profile(string firstName, string lastName, string email, 
+        string street, string number, string city,
         string postalCode, string country)
     {
         Name = new PersonName(firstName, lastName);
         Email = new EmailAddress(email);
-        Address = new StreetAddress(street, city, state, postalCode, country);
+        Address = new StreetAddress(street, number, city, postalCode, country);
     }
-
     /// <summary>
     ///     Initializes a new instance of the <see cref="Profile" /> class from a create profile command.
     /// </summary>
