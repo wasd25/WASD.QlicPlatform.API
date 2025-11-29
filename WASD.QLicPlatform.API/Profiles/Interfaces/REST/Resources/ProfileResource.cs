@@ -1,18 +1,19 @@
 namespace WASD.QLicPlatform.API.Profiles.Interfaces.REST.Resources;
 
-/// <summary>
-///     Profile resource for REST API
-/// </summary>
-/// <param name="Id">
-///     The unique identifier of the profile
-/// </param>
-/// <param name="FullName">
-///     The full name of the profile
-/// </param>
-/// <param name="Email">
-///     The email address of the profile
-/// </param>
-/// <param name="StreetAddress">
-///     The street address of the profile
-/// </param>
-public record ProfileResource(int Id, string FullName, string Email, string StreetAddress);
+public record ProfileResource(
+    int Id,
+    string FirstName,
+    string LastName,
+    string Email,
+    string Street,
+    string Number,
+    string City,
+    string PostalCode,
+    string Country,
+    string AvatarUrl,
+    int Age,
+    string Phone,
+    // Mantenemos estos por si alguna vista de solo lectura los usa
+    string FullName, 
+    string FullAddress 
+);

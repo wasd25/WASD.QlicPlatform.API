@@ -3,22 +3,25 @@ using WASD.QLicPlatform.API.Profiles.Interfaces.REST.Resources;
 
 namespace WASD.QLicPlatform.API.Profiles.Interfaces.REST.Transform;
 
-/// <summary>
-///     Assembler class to convert Profile entity to ProfileResource
-/// </summary>
 public static class ProfileResourceFromEntityAssembler
 {
-    /// <summary>
-    ///     Convert Profile entity to ProfileResource
-    /// </summary>
-    /// <param name="entity">
-    ///     <see cref="Profile" /> entity to convert
-    /// </param>
-    /// <returns>
-    ///     <see cref="ProfileResource" /> converted from <see cref="Profile" /> entity
-    /// </returns>
     public static ProfileResource ToResourceFromEntity(Profile entity)
     {
-        return new ProfileResource(entity.Id, entity.FullName, entity.EmailAddress, entity.StreetAddress);
+        return new ProfileResource(
+            entity.Id,
+            entity.Name.FirstName,
+            entity.Name.LastName,
+            entity.Email.Address,
+            entity.Address.Street,
+            entity.Address.Number,
+            entity.Address.City,
+            entity.Address.PostalCode,
+            entity.Address.Country,
+            entity.AvatarUrl,
+            entity.Age,
+            entity.Phone,
+            entity.FullName,     // Dato extra computado
+            entity.StreetAddress // Dato extra computado
+        );
     }
 }

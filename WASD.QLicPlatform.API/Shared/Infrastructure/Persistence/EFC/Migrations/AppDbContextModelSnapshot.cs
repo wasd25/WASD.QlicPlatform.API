@@ -248,9 +248,20 @@ namespace WASD.QLicPlatform.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AvatarUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<DateTimeOffset?>("CreatedDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("CreatedAt");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTimeOffset?>("UpdatedDate")
                         .HasColumnType("datetime(6)")
@@ -371,6 +382,12 @@ namespace WASD.QLicPlatform.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -395,6 +412,12 @@ namespace WASD.QLicPlatform.API.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("type");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("NULL");
+
                     b.HasKey("Id")
                         .HasName("p_k_report_summaries");
 
@@ -411,7 +434,7 @@ namespace WASD.QLicPlatform.API.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("Day")
-                        .HasColumnType("datetime(6)")
+                        .HasColumnType("date")
                         .HasColumnName("day");
 
                     b.Property<int>("Liters")
@@ -520,7 +543,7 @@ namespace WASD.QLicPlatform.API.Migrations
                             b1.Property<string>("Address")
                                 .IsRequired()
                                 .HasColumnType("longtext")
-                                .HasColumnName("EmailAddress");
+                                .HasColumnName("Email");
 
                             b1.HasKey("Id");
 
@@ -561,27 +584,27 @@ namespace WASD.QLicPlatform.API.Migrations
                             b1.Property<string>("City")
                                 .IsRequired()
                                 .HasColumnType("longtext")
-                                .HasColumnName("AddressCity");
+                                .HasColumnName("City");
 
                             b1.Property<string>("Country")
                                 .IsRequired()
                                 .HasColumnType("longtext")
-                                .HasColumnName("AddressCountry");
+                                .HasColumnName("Country");
 
                             b1.Property<string>("Number")
                                 .IsRequired()
                                 .HasColumnType("longtext")
-                                .HasColumnName("AddressNumber");
+                                .HasColumnName("Number");
 
                             b1.Property<string>("PostalCode")
                                 .IsRequired()
                                 .HasColumnType("longtext")
-                                .HasColumnName("AddressPostalCode");
+                                .HasColumnName("PostalCode");
 
                             b1.Property<string>("Street")
                                 .IsRequired()
                                 .HasColumnType("longtext")
-                                .HasColumnName("AddressStreet");
+                                .HasColumnName("Street");
 
                             b1.HasKey("Id");
 
