@@ -1,5 +1,6 @@
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
+using WASD.QLicPlatform.API.Alerts.Domain.Model.Aggregate;
 using WASD.QLicPlatform.API.Alerts.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using WASD.QLicPlatform.API.Usage_Management.Infrastructure.Persistence.EFC.Configuration.Extensions;
@@ -26,6 +27,8 @@ namespace WASD.QLicPlatform.API.Shared.Infrastructure.Persistence.EFC.Configurat
 public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<Anomaly> Anomalies { get; set; }
+    
+    public DbSet<Alert> Alerts { get; set; }
 
     public DbSet<Report> Reports { get; set; }
     

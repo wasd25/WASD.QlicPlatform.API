@@ -9,13 +9,16 @@ public partial class Alert
     public string Title { get; private set; }
     public string Message { get; private set; }
     public string Timestamp { get; private set; }
-    
+
+    // Constructor sin parámetros requerido por Entity Framework Core
+    protected Alert() { }
+
     public Alert(int id, string alertType, string title, string message, string timestamp)
     {
         Id = id;
         AlertType = alertType;
         Title = title;
-        Message = message; 
+        Message = message;
         Timestamp = timestamp;
     }
 
