@@ -1,4 +1,4 @@
-﻿using System.Net.Mime;
+﻿﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using WASD.QLicPlatform.API.Payments.Domain.Model.Commands;
 using WASD.QLicPlatform.API.Payments.Domain.Model.Queries;
@@ -49,6 +49,19 @@ public class PaymentMethodsController(
         
         var paymentMethodResource = PaymentMethodResourceFromEntityAssembler.ToResourceFromEntity(paymentMethod);
         return CreatedAtAction(nameof(GetPaymentMethodById), new { id = paymentMethod.Id }, paymentMethodResource);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdatePaymentMethod(int id, [FromBody] UpdatePaymentMethodResource resource)
+    {
+        var updatePaymentMethodCommand = UpdatePaymentMethodCommandFromResourceAssembler.ToCommandFromResource(id, resource);
+        var paymentMethod = await paymentMethodCommandService.Handle(updatePaymentMethodCommand);
+        
+        if (paymentMethod == null)
+            return NotFound();
+        
+        var paymentMethodResource = PaymentMethodResourceFromEntityAssembler.ToResourceFromEntity(paymentMethod);
+        return Ok(paymentMethodResource);
     }
 
     [HttpDelete("{id:int}")]
