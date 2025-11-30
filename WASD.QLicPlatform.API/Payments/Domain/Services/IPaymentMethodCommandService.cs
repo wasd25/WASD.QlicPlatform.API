@@ -6,6 +6,7 @@ namespace WASD.QLicPlatform.API.Payments.Domain.Services;
 public interface IPaymentMethodCommandService
 {
     Task<PaymentMethod?> Handle(CreatePaymentMethodCommand command);
+    Task<PaymentMethod?> Handle(UpdatePaymentMethodCommand command);
     Task<bool> Handle(DeletePaymentMethodCommand command);
 }
 
