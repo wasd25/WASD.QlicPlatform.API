@@ -35,6 +35,33 @@ public class PaymentMethodCommandService(IPaymentMethodRepository paymentMethodR
         return paymentMethod;
     }
 
+    public async Task<PaymentMethod?> Handle(UpdatePaymentMethodCommand command)
+    {
+        var paymentMethod = await paymentMethodRepository.FindByIdAsync(command.Id);
+        
+        if (paymentMethod == null)
+            return null;
+        
+        // If this is set as default, unset all other default payment methods
+        if (command.IsDefault && !paymentMethod.IsDefault)
+        {
+            var currentDefault = await paymentMethodRepository.FindDefaultAsync();
+            if (currentDefault != null)
+            {
+                currentDefault.IsDefault = false;
+                paymentMethodRepository.Update(currentDefault);
+            }
+        }
+        
+        // Update only IsDefault property
+        paymentMethod.IsDefault = command.IsDefault;
+        
+        paymentMethodRepository.Update(paymentMethod);
+        await unitOfWork.CompleteAsync();
+        
+        return paymentMethod;
+    }
+
     public async Task<bool> Handle(DeletePaymentMethodCommand command)
     {
         var paymentMethod = await paymentMethodRepository.FindByIdAsync(command.Id);
